@@ -1,4 +1,4 @@
-from generate_features import utility
+import utility
 import csv
 from feature_manager import FeatureManager
 

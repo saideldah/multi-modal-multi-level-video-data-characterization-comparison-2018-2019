@@ -1,6 +1,6 @@
 import csv
 
-from generate_features import utility
+import utility
 
 
 class FeaturesNormalizationManager:
@@ -79,9 +79,11 @@ class FeaturesNormalizationManager:
             for vector in self.feature_list:
                 normalized_vector = vector[0:17]
                 inter_intensity_variation_vector = self.__convert_to_float(vector[17:26])
-                inter_intensity_variation = sum(inter_intensity_variation_vector)/len(inter_intensity_variation_vector)
+                inter_intensity_variation = sum(inter_intensity_variation_vector) / len(
+                    inter_intensity_variation_vector)
                 intra_intensity_variation_vector = self.__convert_to_float(vector[26:35])
-                intra_intensity_variation = sum(intra_intensity_variation_vector)/len(intra_intensity_variation_vector)
+                intra_intensity_variation = sum(intra_intensity_variation_vector) / len(
+                    intra_intensity_variation_vector)
                 other_features = self.__convert_to_float(vector[35:len(vector)])
                 normalized_vector.append(inter_intensity_variation)
                 normalized_vector.append(intra_intensity_variation)

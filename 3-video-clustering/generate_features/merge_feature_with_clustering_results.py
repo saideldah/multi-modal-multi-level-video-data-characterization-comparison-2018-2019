@@ -1,4 +1,4 @@
-from generate_features import utility as utl
+import utility as utl
 import csv
 
 
