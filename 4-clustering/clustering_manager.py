@@ -118,15 +118,59 @@ class ClusteringManager:
         utility.print_time_now()
 
 
-def main():
-    input_file = "./input/video_features.csv"
-    k_means_output_file = "./clustering_results/k_means/videos/k_means_video_clustering_results.csv"
-    mean_shift_output_file = "./clustering_results/mean_shift/videos/video_clustering_results.csv"
-    cm = ClusteringManager(input_file, number_of_clusters=26)
-    # cm.k_means(k_means_output_file)
+def run_k_means():
+    number_of_clusters = 26
+    for i in range(10):
+
+        if i == 1:
+            number_of_clusters = 30
+        else:
+            if i > 0:
+                number_of_clusters = number_of_clusters + 5
+
+        print("-----------------------------------------------")
+
+        print("number_of_clusters =:" + str(number_of_clusters))
+
+        # Video
+        # input_video_features = "./input/video_features.csv"
+        # not_normalized_k_means_output_file = "./clustering_results/k_means/videos/not-normalized-intra-and-iner/" \
+        #                                      + str(number_of_clusters) + "_k_means_video_clustering_results.csv"
+        # input_video_features_cm = ClusteringManager(input_video_features, number_of_clusters=number_of_clusters)
+        # input_video_features_cm.k_means(not_normalized_k_means_output_file)
+
+        # input_normalized_video_features = "./input/normalized_video_features.csv"
+        # normalized_k_means_output_file = "./clustering_results/k_means/videos/normalized-intra-and-iner/" \
+        #                                  + str(number_of_clusters) + "_k_means_video_clustering_results.csv"
+        # input_video_features_cm = ClusteringManager(input_normalized_video_features,
+        #                                             number_of_clusters=number_of_clusters)
+        # input_video_features_cm.k_means(normalized_k_means_output_file)
+
+        # Shots
+
+        # input_video_features = "./input/shots_features.csv"
+        # not_normalized_k_means_output_file = "./clustering_results/k_means/shots/not-normalized-intra-and-iner/" \
+        #                                      + str(number_of_clusters) + "_k_means_shots_clustering_results.csv"
+        # input_video_features_cm = ClusteringManager(input_video_features, number_of_clusters=number_of_clusters)
+        # input_video_features_cm.k_means(not_normalized_k_means_output_file)
+
+        input_normalized_video_features = "./input/normalized_shots_features.csv"
+        normalized_k_means_output_file = "./clustering_results/k_means/shots/normalized-intra-and-iner/" \
+                                         + str(number_of_clusters) + "_k_means_shots_clustering_results.csv"
+        input_video_features_cm = ClusteringManager(input_normalized_video_features,
+                                                    number_of_clusters=number_of_clusters)
+        input_video_features_cm.k_means(normalized_k_means_output_file)
+
+
+def run_mean_shift():
+    print("run")
     # shots bandwidth = 129.05443509705086
-    bandwidth = 100
-    cm.mean_shift(mean_shift_output_file, bandwidth)
+    # bandwidth = 100
+    # cm.mean_shift(mean_shift_output_file, bandwidth)
+
+
+def main():
+    run_k_means()
 
 
 main()
