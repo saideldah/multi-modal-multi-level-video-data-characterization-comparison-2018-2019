@@ -119,9 +119,9 @@ class ClusteringManager:
 
 
 def main():
-    input_file = "../video_features.csv"
-    k_means_output_file = "clustering_results/k_means/videos/k_means_video_clustering_results.csv"
-    mean_shift_output_file = "clustering_results/mean_shift/videos/video_clustering_results.csv"
+    input_file = "./input/video_features.csv"
+    k_means_output_file = "./clustering_results/k_means/videos/k_means_video_clustering_results.csv"
+    mean_shift_output_file = "./clustering_results/mean_shift/videos/video_clustering_results.csv"
     cm = ClusteringManager(input_file, number_of_clusters=26)
     # cm.k_means(k_means_output_file)
     # shots bandwidth = 129.05443509705086
