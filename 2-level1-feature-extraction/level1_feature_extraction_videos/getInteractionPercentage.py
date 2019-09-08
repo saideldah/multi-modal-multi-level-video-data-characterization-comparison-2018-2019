@@ -1,64 +1,40 @@
-'''
-Created on Jun 13, 2016
-
-@author: root
-'''
-
-import xml.dom.minidom
-def intersection(startI, endI, startJ,endJ):
-    i0 = max(startI, startJ)
-    i1 = min(endI, endJ)
+def intersection(start_i, end_i, start_j, end_j):
+    i0 = max(start_i, start_j)
+    i1 = min(end_i, end_j)
     if i0 >= i1:
         return 0
     else:
-        return i1-i0
-def percentageInteraction(fileName, NbDespartie):
-    doc = xml.dom.minidom.parse(fileName)
-       
-    interaction = doc.getElementsByTagName("Interaction")
-      
-    duree= float(doc.getElementsByTagName("Duration")[0].childNodes[0].data)
+        return i1 - i0
 
-    #print duree
-    tailleDeCase = duree / NbDespartie
-    #print tailleDeCase
-    pourcentage=[]
-    for i in range(NbDespartie):
-        pourcentage.append({'interaction2Speakers':0, 'interaction3Speakers':0, 'interaction4Speakers':0, 'interaction4+Speakers':0})
 
-    debutSeg = finSeg=0;
-    for i in range(0, NbDespartie):
-        debutSeg=finSeg
-        finSeg = finSeg + tailleDeCase
-        for s in interaction:
-            debut = float(s.getAttribute('start'))
-            fin = float(s.getAttribute('end'))
-            sequenceInteractions = str(s.childNodes[0].data).split()
-            #print sequenceInteractions 
-            #print str(len(sequenceInteractions))
-            l = len(sequenceInteractions)
-            if debut > finSeg:
-                break
-            intersect = intersection(debutSeg,finSeg,debut,fin)
-            if l == 2:
-                index = 'interaction2Speakers'
-            elif l == 3:
-                index = 'interaction3Speakers'
-            elif l == 4:
-                index = 'interaction4Speakers'
-            else:
-                index = 'interaction4+Speakers'
-            #print str(i) + ": " + str(intersect)
-            pourcentage[i][index] = pourcentage[i][index] + intersect
-    #print pourcentage
-    for i in range(0, NbDespartie):
-        pourcentage[i]['interaction2Speakers'] = round(pourcentage[i]['interaction2Speakers'] *100 / tailleDeCase,2)
-        pourcentage[i]['interaction3Speakers'] = round(pourcentage[i]['interaction3Speakers'] *100 / tailleDeCase,2)
-        pourcentage[i]['interaction4Speakers'] = round(pourcentage[i]['interaction4Speakers'] *100 / tailleDeCase,2)
-        pourcentage[i]['interaction4+Speakers'] = round(pourcentage[i]['interaction4+Speakers'] *100 / tailleDeCase,2)
-    return pourcentage
+def percentage_interaction(doc, shot_start, shot_end):
+    interactions = doc.getElementsByTagName("Interaction")
+    case_size = shot_end - shot_start
+    percentage = {'interaction2Speakers': 0, 'interaction3Speakers': 0, 'interaction4Speakers': 0,
+                  'interaction4+Speakers': 0}
 
-if __name__ == '__main__':
-    print(percentageInteraction("/home/zein/Eclipse_Workspace/test_Dataset/DEV_DESCRIPTORS_L0/Culinarymedia-BrunelloLuncheon617.xml", 3))
-pass
+    for interaction in interactions:
+        interaction_start = float(interaction.getAttribute('start'))
+        interaction_end = float(interaction.getAttribute('end'))
 
+        sequence_interactions = str(interaction.childNodes[0].data).split()
+        length = len(sequence_interactions)
+
+        intersect = intersection(shot_start, shot_end, interaction_start, interaction_end)
+
+        if length == 2:
+            index = 'interaction2Speakers'
+        elif length == 3:
+            index = 'interaction3Speakers'
+        elif length == 4:
+            index = 'interaction4Speakers'
+        else:
+            index = 'interaction4+Speakers'
+        percentage[index] = percentage[index] + intersect
+
+    percentage['interaction2Speakers'] = round(percentage['interaction2Speakers'] * 100 / case_size, 2)
+    percentage['interaction3Speakers'] = round(percentage['interaction3Speakers'] * 100 / case_size, 2)
+    percentage['interaction4Speakers'] = round(percentage['interaction4Speakers'] * 100 / case_size, 2)
+    percentage['interaction4+Speakers'] = round(percentage['interaction4+Speakers'] * 100 / case_size, 2)
+
+    return percentage

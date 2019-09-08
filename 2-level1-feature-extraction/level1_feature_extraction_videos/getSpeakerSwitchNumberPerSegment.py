@@ -1,51 +1,35 @@
-'''
-Created on Jun 26, 2016
+import utility
 
-@author: root
-'''
 
-# in this module we compute for each segment how manuy times there is a switch from one speaker to another speaker during the segment. Even if the two speakers are separated by a long gap
-# Whenever a speaker segment ends during the segmnet and another one starts in the segment and the two speakers are different we add to the counter 1
-import xml.dom.minidom
+# in this module we compute for each segment how many times there is a switch from one speaker to another speaker
+# during the segment. Even if the two speakers are separated by a long gap Whenever a speaker segment ends during the
+# segment and another one starts in the segment and the two speakers are different we add to the counter 1
 
-def computeNumberSpeakerSwitchPerSegment(fileName, nbSegments):
-    doc = xml.dom.minidom.parse(fileName)
-    TableauDesParoles = []
-    speaker = doc.getElementsByTagName("SpeechSegment")
-    for s in speaker:
-        idS = s.getAttribute('spkid')      
-        # for tour in range(0,nbTour):
-        debut = float(s.getAttribute('stime'))
-        fin = float(s.getAttribute('etime'))
-        loc = []
-        loc.append(debut)
-        loc.append(fin)
-        loc.append(str(idS))
-        TableauDesParoles.append(loc)
-    TableauDesParoles.sort()
-    # print(TableauDesParoles)
-    if len(TableauDesParoles)==0:
-        return [0]*nbSegments  
-    duree= float(doc.getElementsByTagName("Duration")[0].childNodes[0].data)
-    #print duree
-    tailleDeCase = duree / nbSegments
-    Resultat = []
-    debutSeg = finSeg=0;
-  
-    for i in range(0, nbSegments):
-        debutSeg=finSeg
-        finSeg = finSeg + tailleDeCase
-        cmpt = 0
-        for j in range(len(TableauDesParoles)-1):
-            if debut > finSeg:
-                break
-            if TableauDesParoles[j][1] > debutSeg and TableauDesParoles[j][1] < finSeg and TableauDesParoles[j+1][0] < finSeg and TableauDesParoles[j][2] != TableauDesParoles[j+1][2]:
+def compute_number_speaker_switch_per_segment(doc, shot_start, shot_end):
+    speaker_list = []
+    speakers = doc.getElementsByTagName("SpeechSegment")
+    for speaker in speakers:
+        speech_id = speaker.getAttribute('spkid')
+        speaker_start = float(speaker.getAttribute('stime'))
+        speaker_end = float(speaker.getAttribute('etime'))
+        loc = [speaker_start, speaker_end, str(speech_id)]
+        if utility.is_valid_shot(speaker_start, speaker_end, shot_start, shot_end):
+            speaker_list.append(loc)
+
+    speaker_list.sort()
+    if len(speaker_list) == 0:
+        return 0 * 1
+    case_size = shot_end - shot_start
+
+    cmpt = 0
+    for j in range(len(speaker_list) - 1):
+        speaker = speaker_list[j]
+        speaker_start = speaker[0]
+        speaker_end = speaker[1]
+        if utility.is_valid_shot(speaker_start, speaker_end, shot_start, shot_end):
+            if shot_start < speaker_list[j][1] < shot_end \
+                    and speaker_list[j + 1][0] < shot_end \
+                    and speaker_list[j][2] != speaker_list[j + 1][2]:
                 cmpt += 1
-    
-        Resultat.append(cmpt*100/tailleDeCase)
-    return Resultat
-'''
-if __name__ == '__main__':
-    print(computeNumberSpeakerSwitchPerSegment("/home/zein/Eclipse_Workspace/test_Dataset/DEV_DESCRIPTORS_L0/Culinarymedia-QuickBitesHawaiiDay1729.xml", 1))
-pass
-'''
+    result = cmpt * 100 / case_size
+    return result

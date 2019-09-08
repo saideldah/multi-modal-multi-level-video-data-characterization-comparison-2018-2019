@@ -2,7 +2,7 @@ import utility
 import csv
 from feature_manager import FeatureManager
 
-directory_path = "C:/code/features/output/shots/structure-analysis-shots/"
+directory_path = "C:/code/features/output/video/structure-analysis-video-dev/"
 feature_files = utility.get_file_name_list(directory_path)
 feature_vector_list = []
 iteration = 1
@@ -13,7 +13,7 @@ for file_name in feature_files:
     utility.print_progress_bar(iteration, max_value)
     iteration += 1
 print "start csv"
-with open('shots_features.csv', 'wb') as f:
+with open('complete_video_features.csv', 'wb') as f:
     the_writer = csv.writer(f)
     headers = [
         "video",

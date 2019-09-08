@@ -1,153 +1,95 @@
-'''
-Created on Jun 13, 2016
-
-@author: root
-'''
-import xml.dom.minidom
 import math
-'''
-def Nearest(v, listV):
-    minV = listV[len(listV)-1][1]
-    value = minV
-    for i in range(0,len(listV)):
-        #if(abs(v-listV[i][0]) < minV):
-        #    minV = abs(v-listV[i][0])
-        #    value = listV[i][0]
-        if(abs(v-listV[i][1]) < minV):
-            minV = abs(v-listV[i][1])
-            value = listV[i][1]
-    return value    
-def getBestSpliting(duree, NbDespartie, shotList):
-    result=[]
-    tailleDeCase = duree / NbDespartie
-    debutSeg = finSeg=0;
-    for i in range(0, NbDespartie):
-        debutSeg = finSeg
-        finSeg = Nearest(finSeg + tailleDeCase, shotList)
-        result.append([debutSeg, finSeg])
-    print result
-'''
-def intersection(startI, endI, startJ,endJ):
-    i0 = max(startI, startJ)
-    i1 = min(endI, endJ)
+
+import utility
+
+
+def intersection(start_i, end_i, start_j, end_j):
+    i0 = max(start_i, start_j)
+    i1 = min(end_i, end_j)
     if i0 >= i1:
         return 0
     else:
-        return i1-i0
-def getNbFacesVariation(fileName, NbDespartie):
-    doc = xml.dom.minidom.parse(fileName)
-    shotList = doc.getElementsByTagName("Shot")
-    
-    duree= float(doc.getElementsByTagName("Duration")[0].childNodes[0].data)
-    tailleDeCase = duree / NbDespartie
-    #print tailleDeCase
-    pourcentage=[]
-    listFaces=[]
-    debutSeg = 0
-    finSeg = 0
-    for i in range(0, NbDespartie):
-        debutSeg=finSeg
-        finSeg = finSeg + tailleDeCase
-        listFaces=set()
-        for s in shotList:
-            nbFaces = int(s.getAttribute('nbFaces'))      
-            debut = float(s.getAttribute('stime'))
-            fin = float(s.getAttribute('etime'))
-            if debut > finSeg:
-                break
-            intersect = intersection(debutSeg,finSeg,debut,fin)
-            if intersect > 0:
-                listFaces.add(nbFaces)
-        pourcentage.append(listFaces)
-    return pourcentage
-    #videoSegments = getBestSpliting(duree, NbDespartie, TableauDesPlans)
-    #print videoSegments
-def getMeanVariancePatches(allpatchesSegment):
-    #print allpatchesSegment
-    sumPatches=[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]
-    #sumPatchesSquare=[0,0,0,0,0,0,0,0,0]
-    varianceP = [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]
-    for i in range(len(allpatchesSegment)):
-        patch = allpatchesSegment[i]
-        sumPatches = [sumPatches[j]+patch[j] for j in range(len(patch))]
-        #sumPatchesSquare = [sumPatchesSquare[j]+(patch[j]*patch[j]) for j in range(len(patch))]
-    meanP = [round(sumPatches[j]/len(allpatchesSegment)) for j in range(len(sumPatches))]
-    
-    for i in range(len(allpatchesSegment)):
-        patch = allpatchesSegment[i]
-        for j in range(len(patch)):
-            varianceP[j] = varianceP[j]+((patch[j]-meanP[j])*(patch[j]-meanP[j]))
-    #print varianceP    
-    for i in range(len(patch)):
-        varianceP[i] = round(math.sqrt(varianceP[i]/len(allpatchesSegment)))
-    #varianceP = [sumPatchesSquare[j]/len(allpatchesSegment) for j in range(len(sumPatchesSquare))]
-    #varianceP = [varianceP[j] - (meanP[j]*meanP[j]) for j in range(len(varianceP))]
-    #print str(meanP) + " , " + str(varianceP)
-    return meanP, varianceP
+        return i1 - i0
 
-def getKeyframesInterIntraSegmentsIntensityVariation(fileName, NbDespartie):
-    # in this method we calculate the inter and intra segment variation of the intensity colos over the patches
-    #we compute also the number of transitions from one shot to another shot inside a segment
-    doc = xml.dom.minidom.parse(fileName)
-    shotList = doc.getElementsByTagName("Shot")
-    
-    duree= float(doc.getElementsByTagName("Duration")[0].childNodes[0].data)
-    tailleDeCase = duree / NbDespartie
-    #print tailleDeCase
-    variationInter = []
-    variationIntra = []
-    debutSeg = 0
-    finSeg = 0
-    listpatches=[]
-    allpatchesSegment = []
-    nbTransitions =[]
-    for i in range(0, NbDespartie):
-        debutSeg=finSeg
-        finSeg = finSeg + tailleDeCase
-        averagePatches=[0,0,0,0,0,0,0,0,0]
-        allpatchesSegment = []
-        cmpt=0
-        #print "########: " + str(debutSeg) + " : " + str(finSeg)
-        for s in shotList:
-            weight = 0
-            patches = [int(v) for v in s.getAttribute('Patches')[1:-1].split(",")]      
-            debut = float(s.getAttribute('stime'))
-            fin = float(s.getAttribute('etime'))
-            if debut > finSeg:
-                break
-            intersect = intersection(debutSeg,finSeg,debut,fin)
-            if intersect > 0:
-                #print str(i+1) + " : " + str(debut) + " , " + str(fin)
-                weight = float(intersect)/ (finSeg-debutSeg)
-                #print(weight)
-                averagePatches = [averagePatches[j]+weight*patches[j] for j in range(len(patches))]
-                allpatchesSegment.append(patches)
-            if fin > debutSeg and fin < finSeg:
-                cmpt = cmpt+1
-        meanPatches, variancePatches = getMeanVariancePatches(allpatchesSegment)
-        #print cmpt
-        nbTransitions.append(cmpt*100/duree)
-        #variationIntra.append(meanPatches)
-        variationIntra.append(variancePatches)
-        #averagePatches = [float(averagePatches[i])*weight for i in range(len(averagePatches))]
-        listpatches.append(averagePatches)
-        #pourcentage.append(listPatches)
-    #print listpatches
-    for i in range(0,len(listpatches)-1):
-        l=[round(abs(listpatches[i][j]-listpatches[i+1][j]),2) for j in range(0,len(listpatches[i]))]
-        variationInter.append(l)
-    return variationInter, variationIntra, nbTransitions
-    #videoSegments = getBestSpliting(duree, NbDespartie, TableauDesPlans)
-    #print videoSegments    
-'''    
-if __name__ == '__main__':
-    #getNbFacesVariation( "/home/zein/Eclipse_Workspace/test_Dataset/DEV_DESCRIPTORS_L0/Culinarymedia-QuickBitesHawaiiDay1729.xml", 4)
-    inter, intra, nb = getKeyframesInterIntraSegmentsIntensityVariation( "/home/zein/Eclipse_Workspace/test_Dataset/DEV_DESCRIPTORS_L0/Culinarymedia-QuickBitesHawaiiDay1729.xml", 4)
-    print nb
-    i=0
-    #while(i<len(intra)):
-    #      print str(intra[i]) +" , "+str(intra[i+1])
-    #      i=i+2
-    pass
-    
-    '''
+
+def get_number_of_faces_variation(doc, start, end):
+    shot_list = doc.getElementsByTagName("Shot")
+    faces_list = set()
+    for shot in shot_list:
+        nbFaces = int(shot.getAttribute('nbFaces'))
+        percentage_faces = float(shot.getAttribute('percentageFaces'))
+        shot_start = float(shot.getAttribute('stime'))
+        shot_end = float(shot.getAttribute('etime'))
+        # if utility.is_valid_shot(shot_start, shot_end, start, end):
+        intersect = intersection(start, end, shot_start, shot_end)
+        if intersect > 0:
+            faces_list.add(float(nbFaces * percentage_faces))
+
+    percentage = faces_list
+    return percentage
+
+
+def get_mean_variance_patches(all_patches_segment):
+    sum_patches = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+    variance_patches = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+
+    patch = []
+
+    for i in range(len(all_patches_segment)):
+        patch = all_patches_segment[i]
+        sum_patches = [sum_patches[j] + patch[j] for j in range(len(patch))]
+    mean_patches = []
+    for j in range(len(sum_patches)):
+        if len(all_patches_segment) > 0:
+            mean_patches.append(round(sum_patches[j] / len(all_patches_segment)))
+        else:
+            mean_patches.append(0.0)
+
+    for i in range(len(all_patches_segment)):
+        patch = all_patches_segment[i]
+        for j in range(len(patch)):
+            variance_patches[j] = variance_patches[j] + ((patch[j] - mean_patches[j]) * (patch[j] - mean_patches[j]))
+    for i in range(len(patch)):
+        variance_patches[i] = round(math.sqrt(variance_patches[i] / len(all_patches_segment)))
+    return mean_patches, variance_patches
+
+
+def get_key_frames_inter_intra_segments_intensity_variation(doc, start, end):
+    # in this method we calculate the inter and intra segment variation of the intensity colors over the patches
+    # we compute also the number of transitions from one shot to another shot inside a segment
+    shot_list = doc.getElementsByTagName("Shot")
+
+    duration = float(doc.getElementsByTagName("Duration")[0].childNodes[0].data)
+    variation_inter = []
+    variation_intra = []
+    patches_list = []
+    nb_transitions = []
+
+    averagePatches = [0, 0, 0, 0, 0, 0, 0, 0, 0]
+    all_patches_segment = []
+    cmpt = 0
+    for shot in shot_list:
+        patches = [int(v) for v in shot.getAttribute('Patches')[1:-1].split(",")]
+        shot_start = float(shot.getAttribute('stime'))
+        shot_end = float(shot.getAttribute('etime'))
+        # if utility.is_valid_shot(shot_start, shot_end, start, end):
+        intersect = intersection(start, end, shot_start, shot_end)
+        if intersect > 0:
+            weight = float(intersect) / (end - start)
+            averagePatches = [averagePatches[j] + weight * patches[j] for j in range(len(patches))]
+            all_patches_segment.append(patches)
+        if start < shot_end < end:
+            cmpt = cmpt + 1
+
+    mean_patches, variance_patches = get_mean_variance_patches(all_patches_segment)
+    if duration > 0:
+        nb_transitions = cmpt * 100 / duration
+    else:
+        nb_transitions = 0
+    variation_intra = variance_patches
+    patches_list.append(averagePatches)
+
+    variation_inter_element = [round(abs(patches_list[0][j]), 2) for j in range(0, len(patches_list[0]))]
+    variation_inter = variation_inter_element
+
+    return variation_inter, variation_intra, nb_transitions

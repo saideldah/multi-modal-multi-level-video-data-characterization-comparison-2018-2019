@@ -1,9 +1,9 @@
-import level1_feature_extraction_videos.combineLowLevelFeatures as combineLowLevelFeatures
+import combineLowLevelFeatures as combineLowLevelFeatures
 import utility
 
-input_directory_path = "C:/features/input/test/"
-output_directory_path = "C:/features/output/shots/structure-analysis-shots-test/"
-shots_directory_path = "C:/features/input/dev_shots_normalized_test/"
+input_directory_path = "C:/code/features/input/structure_analysis/dev/4/"
+output_directory_path = "C:/code/features/output/video/structure-analysis-video-dev/"
+shots_directory_path = "C:/code/features/input/shots_files/dev_normalized/"
 
 shot_file_name_list = utility.get_file_name_list(shots_directory_path)
 generated_files = utility.get_file_name_list(output_directory_path)
@@ -17,7 +17,7 @@ for shot_file_name in shot_file_name_list:
     if len(shot_list) > 0 and shot_file_name not in generated_files and shot_file_name in feature_files:
         input_file_path = input_directory_path + shot_file_name
         output_file_path = output_directory_path + shot_file_name
-        combineLowLevelFeatures.generate_percentage_descriptors(input_file_path, output_file_path, shot_list)
+        combineLowLevelFeatures.generate_percentage_descriptors(input_file_path, output_file_path)
         utility.print_progress_bar(i, l)
         i += 1
 

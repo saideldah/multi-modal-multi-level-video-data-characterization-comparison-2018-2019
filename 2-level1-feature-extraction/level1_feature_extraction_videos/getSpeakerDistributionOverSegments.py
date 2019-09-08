@@ -1,47 +1,33 @@
-'''
-Created on May 29, 2016
+import utility
 
-@author: malak
-'''
 
-import xml.dom.minidom
-def intersection(startI, endI, startJ,endJ):
-    i0 = max(startI, startJ)
-    i1 = min(endI, endJ)
+def intersection(start_i, end_i, start_j, end_j):
+    i0 = max(start_i, start_j)
+    i1 = min(end_i, end_j)
     if i0 >= i1:
         return 0
     else:
-        return i1-i0
-    
-def getSpeakerDistribution(fileName, NbDespartie):
-    doc = xml.dom.minidom.parse(fileName)
+        return i1 - i0
+
+
+def get_speaker_distribution(doc, start, end):
     speaker = doc.getElementsByTagName("Speaker")
-    nbSpeaker = len(speaker)
-    speech = doc.getElementsByTagName("SpeechSegment")
-    duree= float(doc.getElementsByTagName("Duration")[0].childNodes[0].data)
-    tailleDeCase = duree / NbDespartie
+    nb_speaker = len(speaker)
+    speeches = doc.getElementsByTagName("SpeechSegment")
     mySet = set()
-    debutSeg = finSeg=0;
-    pourcentage = []
-    for i in range(0, NbDespartie):
-        debutSeg=finSeg
-        finSeg = finSeg + tailleDeCase
-        for s in speech:
-            debut = float(s.getAttribute('stime'))
-            fin = float(s.getAttribute('etime'))
-            idS = s.getAttribute('spkid')
-            if debut > finSeg:
-                break
-            intersect = intersection(debutSeg,finSeg,debut,fin)
-            #print str(i) + ": " + str(intersect)
-            if intersect > 0:
-                mySet.add(idS) 
-        #print mySet
-        pourcentage.append(round(float(len(mySet))*100.0/float(nbSpeaker),2))
-        mySet.clear()    
-    return pourcentage        
-'''
-if __name__ == '__main__':
-    print(getSpeakerDistribution("/home/zein/Eclipse_Workspace/test_Dataset/DEV_DESCRIPTORS_L0/Culinarymedia-CMNVideoHiltlVegetarianRestaurantZurich590.xml", 3))   
-    pass
-'''
+
+    for speech in speeches:
+        speech_start = float(speech.getAttribute('stime'))
+        speech_end = float(speech.getAttribute('etime'))
+        idS = speech.getAttribute('spkid')
+        # if utility.is_valid_shot(speech_start, speech_end, start, end):
+        intersect = intersection(start, end, speech_start, speech_end)
+        if intersect > 0:
+            mySet.add(idS)
+
+    if nb_speaker > 0:
+        percentage = round(float(len(mySet)) * 100.0 / float(nb_speaker), 2)
+    else:
+        percentage = 0.00
+    mySet.clear()
+    return percentage

@@ -40,7 +40,7 @@ class FeaturesNormalizationManager:
     # Processing for the features, get the average of intra and inter (one value per intra and one value per inter)
     def generate_normalized_feature_csv(self):
         print "start csv"
-        with open('normalized_video_features.csv', 'wb') as f:
+        with open('normalized_complete_video_features.csv', 'wb') as f:
             the_writer = csv.writer(f)
             headers = [
                 "video",
@@ -94,7 +94,7 @@ class FeaturesNormalizationManager:
             f.close()
 
 
-features_file_path = "video_features.csv"
+features_file_path = "complete_video_features.csv"
 directory_path = "./"
 
 features_normalization_manager = FeaturesNormalizationManager(directory_path, features_file_path)
