@@ -151,13 +151,13 @@ def run_kMeans():
 
         # Shots
 
-        # input_video_features = "./input/shots_features.csv"
+        # input_video_features = "./input/shot_features.csv"
         # not_normalized_kMeans_output_file = "./clustering_results/kMeans/shots/not-normalized-intra-and-inter/" \
         #                                      + str(number_of_clusters) + "_kMeans_shots_clustering_results.csv"
         # input_video_features_cm = ClusteringManager(input_video_features, number_of_clusters=number_of_clusters)
         # input_video_features_cm.kMeans(not_normalized_kMeans_output_file)
         # 
-        # input_normalized_video_features = "./input/normalized_shots_features.csv"
+        # input_normalized_video_features = "./input/normalized_shot_features.csv"
         # normalized_kMeans_output_file = "./clustering_results/kMeans/shots/normalized-intra-and-inter/" \
         #                                  + str(number_of_clusters) + "_kMeans_shots_clustering_results.csv"
         # input_video_features_cm = ClusteringManager(input_normalized_video_features,

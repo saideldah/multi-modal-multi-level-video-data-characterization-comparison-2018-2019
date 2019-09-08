@@ -139,7 +139,7 @@ def generate_video_feature_set_csv(input_file_path, output_file_path):
 
 
 def main():
-    input_file_path = "shots_features.csv"
+    input_file_path = "shot_features.csv"
     output_file_path = "video_features.csv"
     generate_video_feature_set_csv(input_file_path, output_file_path)
 

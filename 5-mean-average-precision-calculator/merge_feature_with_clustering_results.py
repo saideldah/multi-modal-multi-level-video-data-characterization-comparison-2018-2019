@@ -4,7 +4,7 @@ import csv
 
 class VideoClusterResult:
     name = ""
-    shots = {}
+    shot = {}
     category = ""
 
     def __init__(self):
@@ -13,7 +13,7 @@ class VideoClusterResult:
 
 class VideoFeatures:
     name = ""
-    shots = {}
+    shot = {}
     category = ""
 
     def __init__(self):
@@ -40,16 +40,16 @@ def fill_clustering_results_data(clustering_results_file_path):
                 if video_cluster_result.name == "":
                     video_cluster_result.category = category_label
                     video_cluster_result.name = video_name
-                    video_cluster_result.shots = {}
+                    video_cluster_result.shot = {}
 
-                video_cluster_result.shots[shot_number] = cluster_label
+                video_cluster_result.shot[shot_number] = cluster_label
 
                 if video_cluster_result.name != video_name and video_cluster_result.name not in video_list:
                     video_list[video_cluster_result.name] = video_cluster_result
                     video_cluster_result = VideoClusterResult()
                     video_cluster_result.category = category_label
                     video_cluster_result.name = video_name
-                    video_cluster_result.shots = {}
+                    video_cluster_result.shot = {}
 
                 utl.print_progress_bar(iteration + 1, data_set_count)
             iteration += 1
@@ -78,16 +78,16 @@ def fill_features_data(features_file_path):
                 if video.name == "":
                     video.category = category_label
                     video.name = video_name
-                    video.shots = {}
+                    video.shot = {}
 
-                video.shots[shot_number] = features
+                video.shot[shot_number] = features
 
                 if video.name != video_name and video.name not in video_list:
                     video_list[video.name] = video
                     video = VideoClusterResult()
                     video.category = category_label
                     video.name = video_name
-                    video.shots = {}
+                    video.shot = {}
 
                 utl.print_progress_bar(iteration + 1, data_set_count)
             iteration += 1
@@ -157,8 +157,8 @@ def merge_features_with_clustering_results_not_normalized(features_file_path, cl
         iteration = 1
         for video_name, video in clustering_result_data.iteritems():
             video_from_features = features_data[video_name]
-            for shot_number, cluster in video.shots.iteritems():
-                features = video_from_features.shots[shot_number]
+            for shot_number, cluster in video.shot.iteritems():
+                features = video_from_features.shot[shot_number]
                 vector = [video_name, shot_number, video.category, cluster] + features
                 the_writer.writerow(vector)
             utl.print_progress_bar(iteration, max_value)
@@ -213,8 +213,8 @@ def merge_features_with_clustering_results_normalized(features_file_path, cluste
         iteration = 1
         for video_name, video in clustering_result_data.iteritems():
             video_from_features = features_data[video_name]
-            for shot_number, cluster in video.shots.iteritems():
-                features = video_from_features.shots[shot_number]
+            for shot_number, cluster in video.shot.iteritems():
+                features = video_from_features.shot[shot_number]
                 vector = [video_name, shot_number, video.category, cluster] + features
                 the_writer.writerow(vector)
             utl.print_progress_bar(iteration, max_value)
@@ -224,10 +224,10 @@ def merge_features_with_clustering_results_normalized(features_file_path, cluste
         print("csv file has been created successfully")
 
 
-def generate_shots_merged_files_not_normalized():
-    features_file_path = "./features/shots_features.csv"
-    clustering_results_file_path = "./clustering_results/k_means/shots/not-normalized-intra-and-inter/"
-    output_file_path = "./clustering_results/k_means/shots/not-normalized-intra-and-inter/merged-with-features/"
+def generate_shot_merged_files_not_normalized():
+    features_file_path = "./features/shot_features.csv"
+    clustering_results_file_path = "./clustering_results/kMeans/shot/complete-intra-inter/"
+    output_file_path = "./mean-average-precision/kMeans/shot/complete-intra-inter/merged-with-features/"
     clustering_results_file_name_list = utl.get_file_name_list(clustering_results_file_path)
 
     for clustering_result_file_name in clustering_results_file_name_list:
@@ -239,10 +239,10 @@ def generate_shots_merged_files_not_normalized():
             print ("---------------------------------------------------------------")
 
 
-def generate_shots_merged_files_normalized():
-    features_file_path = "./features/shots_features.csv"
-    clustering_results_file_path = "./clustering_results/k_means/shots/normalized-intra-and-inter/"
-    output_file_path = "./clustering_results/k_means/shots/normalized-intra-and-inter/merged-with-features/"
+def generate_shot_merged_files_normalized():
+    features_file_path = "./features/normalized_shot_features.csv"
+    clustering_results_file_path = "./clustering_results/kMeans/shot/normalized-intra-inter/"
+    output_file_path = "./mean-average-precision/kMeans/shot/normalized-intra-inter/merged-with-features/"
     clustering_results_file_name_list = utl.get_file_name_list(clustering_results_file_path)
 
     for clustering_result_file_name in clustering_results_file_name_list:
@@ -254,10 +254,10 @@ def generate_shots_merged_files_normalized():
             print ("---------------------------------------------------------------")
 
 
-def generate_videos_merged_files_not_normalized():
+def generate_video_merged_files_not_normalized():
     features_file_path = "./features/video_features.csv"
-    clustering_results_file_path = "./clustering_results/k_means/videos/not-normalized-intra-and-inter/"
-    output_file_path = "./clustering_results/k_means/videos/not-normalized-intra-and-inter/merged-with-features/"
+    clustering_results_file_path = "./clustering_results/kMeans/video/complete-intra-inter/"
+    output_file_path = "./mean-average-precision/kMeans/video/complete-intra-inter/merged-with-features/"
     clustering_results_file_name_list = utl.get_file_name_list(clustering_results_file_path)
 
     for clustering_result_file_name in clustering_results_file_name_list:
@@ -269,10 +269,40 @@ def generate_videos_merged_files_not_normalized():
             print ("---------------------------------------------------------------")
 
 
-def generate_videos_merged_files_normalized():
-    features_file_path = "./features/video_features.csv"
-    clustering_results_file_path = "./clustering_results/k_means/videos/normalized-intra-and-inter/"
-    output_file_path = "./clustering_results/k_means/videos/normalized-intra-and-inter/merged-with-features/"
+def generate_video_merged_files_normalized():
+    features_file_path = "./features/normalized_video_features.csv"
+    clustering_results_file_path = "./clustering_results/kMeans/video/normalized-intra-inter/"
+    output_file_path = "./mean-average-precision/kMeans/video/normalized-intra-inter/merged-with-features/"
+    clustering_results_file_name_list = utl.get_file_name_list(clustering_results_file_path)
+
+    for clustering_result_file_name in clustering_results_file_name_list:
+        if clustering_result_file_name != "merged-with-features":
+            print ("generating " + clustering_result_file_name)
+            merge_features_with_clustering_results_normalized(features_file_path,
+                                                              clustering_results_file_path + clustering_result_file_name
+                                                              , output_file_path + clustering_result_file_name)
+            print ("---------------------------------------------------------------")
+
+
+def generate_complete_video_merged_files_not_normalized():
+    features_file_path = "./features/complete_video_features.csv"
+    clustering_results_file_path = "./clustering_results/kMeans/video/complete-intra-inter/"
+    output_file_path = "./mean-average-precision/kMeans/video/complete-intra-inter/merged-with-features/"
+    clustering_results_file_name_list = utl.get_file_name_list(clustering_results_file_path)
+
+    for clustering_result_file_name in clustering_results_file_name_list:
+        if clustering_result_file_name != "merged-with-features":
+            print ("generating " + clustering_result_file_name)
+            merge_features_with_clustering_results_not_normalized(features_file_path,
+                                                                  clustering_results_file_path + clustering_result_file_name
+                                                                  , output_file_path + clustering_result_file_name)
+            print ("---------------------------------------------------------------")
+
+
+def generate_complete_video_merged_files_normalized():
+    features_file_path = "./features/normalized_complete_video_features.csv"
+    clustering_results_file_path = "./clustering_results/kMeans/video/normalized-intra-inter/"
+    output_file_path = "./mean-average-precision/kMeans/video/normalized-intra-inter/merged-with-features/"
     clustering_results_file_name_list = utl.get_file_name_list(clustering_results_file_path)
 
     for clustering_result_file_name in clustering_results_file_name_list:
@@ -285,10 +315,12 @@ def generate_videos_merged_files_normalized():
 
 
 def main():
-    generate_shots_merged_files_not_normalized()
-    generate_videos_merged_files_not_normalized()
-    generate_shots_merged_files_normalized()
-    generate_videos_merged_files_normalized()
+    generate_shot_merged_files_not_normalized()
+    generate_video_merged_files_not_normalized()
+    generate_shot_merged_files_normalized()
+    generate_video_merged_files_normalized()
+    generate_complete_video_merged_files_not_normalized()
+    generate_complete_video_merged_files_normalized()
 
 
 main()

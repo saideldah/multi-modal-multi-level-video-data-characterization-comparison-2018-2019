@@ -57,7 +57,7 @@ def calculate_distance_mean(category, category_data_set):
 
 
 def generate_category_mean_csv():
-    dataset_by_category_result = fill_data_set("shots_features.csv")
+    dataset_by_category_result = fill_data_set("shot_features.csv")
 
     category_mean_list = {}
     for key, value in dataset_by_category_result.iteritems():
@@ -286,7 +286,7 @@ def create_csv_file(two_category_distance_mean_list):
 
 
 def generate_different_category_mean_csv():
-    dataset_by_category_result = fill_data_set("shots_features.csv")
+    dataset_by_category_result = fill_data_set("shot_features.csv")
 
     key_list = []
     for key, value in dataset_by_category_result.iteritems():
