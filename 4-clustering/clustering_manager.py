@@ -17,12 +17,15 @@ class ClusteringManager:
     __shots_metadata = []
 
     def __init__(self, csv_file, number_of_clusters):
+        self.__data_set = []
+        self.__shots_metadata = []
         with open(csv_file) as f:
             self.__data_set_count = sum(1 for line in f) - 1
         f.close()
         self.__csv_file = csv_file
         self.__number_of_clusters = number_of_clusters
         self.__fill_data_set(csv_file)
+
 
     @staticmethod
     def __convert_to_float(string_vector):
@@ -148,11 +151,11 @@ def run_k_means():
 
         # Shots
 
-        # input_video_features = "./input/shots_features.csv"
-        # not_normalized_k_means_output_file = "./clustering_results/k_means/shots/not-normalized-intra-and-iner/" \
-        #                                      + str(number_of_clusters) + "_k_means_shots_clustering_results.csv"
-        # input_video_features_cm = ClusteringManager(input_video_features, number_of_clusters=number_of_clusters)
-        # input_video_features_cm.k_means(not_normalized_k_means_output_file)
+        input_video_features = "./input/shots_features.csv"
+        not_normalized_k_means_output_file = "./clustering_results/k_means/shots/not-normalized-intra-and-iner/" \
+                                             + str(number_of_clusters) + "_k_means_shots_clustering_results.csv"
+        input_video_features_cm = ClusteringManager(input_video_features, number_of_clusters=number_of_clusters)
+        input_video_features_cm.k_means(not_normalized_k_means_output_file)
 
         input_normalized_video_features = "./input/normalized_shots_features.csv"
         normalized_k_means_output_file = "./clustering_results/k_means/shots/normalized-intra-and-iner/" \
