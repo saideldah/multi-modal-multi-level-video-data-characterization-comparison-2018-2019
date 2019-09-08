@@ -225,9 +225,9 @@ def merge_features_with_clustering_results_normalized(features_file_path, cluste
 
 
 def generate_shots_merged_files_not_normalized():
-    features_file_path = "./input/shots_features.csv"
-    clustering_results_file_path = "./clustering_results/k_means/shots/not-normalized-intra-and-iner/"
-    output_file_path = "./clustering_results/k_means/shots/not-normalized-intra-and-iner/merged-with-features/"
+    features_file_path = "./features/shots_features.csv"
+    clustering_results_file_path = "./clustering_results/k_means/shots/not-normalized-intra-and-inter/"
+    output_file_path = "./clustering_results/k_means/shots/not-normalized-intra-and-inter/merged-with-features/"
     clustering_results_file_name_list = utl.get_file_name_list(clustering_results_file_path)
 
     for clustering_result_file_name in clustering_results_file_name_list:
@@ -240,9 +240,9 @@ def generate_shots_merged_files_not_normalized():
 
 
 def generate_shots_merged_files_normalized():
-    features_file_path = "./input/shots_features.csv"
-    clustering_results_file_path = "./clustering_results/k_means/shots/normalized-intra-and-iner/"
-    output_file_path = "./clustering_results/k_means/shots/normalized-intra-and-iner/merged-with-features/"
+    features_file_path = "./features/shots_features.csv"
+    clustering_results_file_path = "./clustering_results/k_means/shots/normalized-intra-and-inter/"
+    output_file_path = "./clustering_results/k_means/shots/normalized-intra-and-inter/merged-with-features/"
     clustering_results_file_name_list = utl.get_file_name_list(clustering_results_file_path)
 
     for clustering_result_file_name in clustering_results_file_name_list:
@@ -255,9 +255,9 @@ def generate_shots_merged_files_normalized():
 
 
 def generate_videos_merged_files_not_normalized():
-    features_file_path = "./input/video_features.csv"
-    clustering_results_file_path = "./clustering_results/k_means/videos/not-normalized-intra-and-iner/"
-    output_file_path = "./clustering_results/k_means/videos/not-normalized-intra-and-iner/merged-with-features/"
+    features_file_path = "./features/video_features.csv"
+    clustering_results_file_path = "./clustering_results/k_means/videos/not-normalized-intra-and-inter/"
+    output_file_path = "./clustering_results/k_means/videos/not-normalized-intra-and-inter/merged-with-features/"
     clustering_results_file_name_list = utl.get_file_name_list(clustering_results_file_path)
 
     for clustering_result_file_name in clustering_results_file_name_list:
@@ -270,9 +270,9 @@ def generate_videos_merged_files_not_normalized():
 
 
 def generate_videos_merged_files_normalized():
-    features_file_path = "./input/video_features.csv"
-    clustering_results_file_path = "./clustering_results/k_means/videos/normalized-intra-and-iner/"
-    output_file_path = "./clustering_results/k_means/videos/normalized-intra-and-iner/merged-with-features/"
+    features_file_path = "./features/video_features.csv"
+    clustering_results_file_path = "./clustering_results/k_means/videos/normalized-intra-and-inter/"
+    output_file_path = "./clustering_results/k_means/videos/normalized-intra-and-inter/merged-with-features/"
     clustering_results_file_name_list = utl.get_file_name_list(clustering_results_file_path)
 
     for clustering_result_file_name in clustering_results_file_name_list:
