@@ -93,10 +93,11 @@ class MeanAveragePrecisionCalculator:
     def generate_cluster_distribution_per_category_csv(directory_path, file_name):
         dataset_by_category, clusters = MeanAveragePrecisionCalculator.__fill_data_set_by_category(
             directory_path + file_name)
-        pre_fix = file_name.replace(".csv", "")
         print "creating csv file..."
+        output_path = directory_path.replace("clustering_results", "mean-average-precision")
+
         with open(
-                directory_path + pre_fix + '_cluster_distribution_per_category.csv',
+                output_path + "cluster-per-category/" + file_name,
                 'wb') as f:
             the_writer = csv.writer(f)
             headers = [
@@ -127,11 +128,11 @@ class MeanAveragePrecisionCalculator:
     def generate_category_distribution_per_cluster_csv(directory_path, file_name):
         dataset_by_cluster, categories = MeanAveragePrecisionCalculator.__fill_data_set_by_cluster(
             directory_path + file_name)
-        pre_fix = file_name.replace(".csv", "")
 
         print "creating csv file..."
+        output_path = directory_path.replace("clustering_results", "mean-average-precision")
         with open(
-                directory_path + pre_fix + '_category_distribution_per_cluster.csv',
+                output_path + "category-per-cluster/" + file_name,
                 'wb') as f:
             the_writer = csv.writer(f)
             headers = [
@@ -179,15 +180,15 @@ class MeanAveragePrecisionCalculator:
             for row in reader:
                 if iteration > 0:
                     cluster_label = row[0]
-                    cluster_features = MeanAveragePrecisionCalculator.__convert_to_float(row[1: len(row)])
-                    clusters[cluster_label] = cluster_features
+                    cluster_distribution_score = MeanAveragePrecisionCalculator.__convert_to_float(row[1: len(row)])
+                    clusters[cluster_label] = cluster_distribution_score
                 else:
                     categories = row[1: len(row)]
                 iteration += 1
-        max_value = iteration
+        max_value = iteration - 1
         csvFile.close()
-        pre_fix = file_name.replace(".csv", "")
-        with open(pre_fix + "_mean_average_precision_category_per_cluster.csv", 'wb') as f:
+        output_path = directory_path.replace("category-per-cluster", "")
+        with open(output_path + "map-category-per-cluster/" + file_name, 'wb') as f:
             the_writer = csv.writer(f)
             headers = [
                 "cluster",
@@ -198,10 +199,10 @@ class MeanAveragePrecisionCalculator:
             the_writer.writerow(headers)
             iteration = 1
 
-            for cluster_label, cluster_features in clusters.iteritems():
-                max_feature = max(cluster_features)
-                total = sum(cluster_features)
-                index_of_max_feature = cluster_features.index(max_feature)
+            for cluster_label, cluster_distribution_score in clusters.iteritems():
+                max_feature = max(cluster_distribution_score)
+                total = sum(cluster_distribution_score)
+                index_of_max_feature = cluster_distribution_score.index(max_feature)
                 score = max_feature / total
                 vector = [cluster_label, categories[index_of_max_feature], score]
                 the_writer.writerow(vector)
@@ -219,36 +220,36 @@ class MeanAveragePrecisionCalculator:
         with open(directory_path + file_name) as csvFile:
             reader = csv.reader(csvFile)
             print("preparing dataset_by_category ...")
-            clusters = {}
-            categories = []
+            categories = {}
+            clusters = []
             for row in reader:
                 if iteration > 0:
                     category_label = row[0]
-                    category_features = MeanAveragePrecisionCalculator.__convert_to_float(row[1: len(row)])
-                    clusters[category_label] = category_features
+                    category_distribution_score = MeanAveragePrecisionCalculator.__convert_to_float(row[1: len(row)])
+                    categories[category_label] = category_distribution_score
                 else:
-                    categories = row[1: len(row)]
+                    clusters = row[1: len(row)]
                 iteration += 1
-        max_value = iteration
+        max_value = iteration - 1
         csvFile.close()
-        pre_fix = file_name.replace(".csv", "")
-        with open(pre_fix + "_mean_average_precision_cluster_per_category.csv", 'wb') as f:
+        output_path = directory_path.replace("cluster-per-category", "")
+        with open(output_path + "map-cluster-per-category/" + file_name, 'wb') as f:
             the_writer = csv.writer(f)
             headers = [
                 "category",
-                "dominant-category",
+                "cluster",
                 "score"
             ]
 
             the_writer.writerow(headers)
             iteration = 1
 
-            for category_label, category_features in clusters.iteritems():
-                max_feature = max(category_features)
-                total = sum(category_features)
-                index_of_max_feature = category_features.index(max_feature)
+            for category_label, category_distribution_score in categories.iteritems():
+                max_feature = max(category_distribution_score)
+                total = sum(category_distribution_score)
+                index_of_max_feature = category_distribution_score.index(max_feature)
                 score = max_feature / total
-                vector = [category_label, categories[index_of_max_feature], score]
+                vector = [category_label, clusters[index_of_max_feature], score]
                 the_writer.writerow(vector)
                 utl.print_progress_bar(iteration, max_value)
                 iteration += 1
@@ -273,7 +274,7 @@ def generate_distribution_csv_files(directory_path):
             print ("---------------------------------------------------------------")
 
 
-def generate_mean_average_precision_csv_files(directory_path):
+def generate_mean_average_precision_category_per_cluster_csv_files(directory_path):
     file_name_list = utl.get_file_name_list(directory_path)
     for file_name in file_name_list:
         print ("generating mean_average_precision for " + file_name)
@@ -282,23 +283,44 @@ def generate_mean_average_precision_csv_files(directory_path):
         print ("---------------------------------------------------------------")
 
 
+def generate_mean_average_precision_cluster_per_category_csv_files(directory_path):
+    file_name_list = utl.get_file_name_list(directory_path)
+    for file_name in file_name_list:
+        print ("generating mean_average_precision for " + file_name)
+        MeanAveragePrecisionCalculator.generate_mean_average_precision_cluster_per_category_csv(directory_path,
+                                                                                                file_name)
+        print ("---------------------------------------------------------------")
+
+
 def main():
     # directory_path_list = [
-    #     "./clustering_results/k_means/shots/not-normalized-intra-and-inter/"
-    #     , "./clustering_results/k_means/shots/normalized-intra-and-inter/"
-    #     , "./clustering_results/k_means/videos/not-normalized-intra-and-inter/"
-    #     , "./clustering_results/k_means/videos/normalized-intra-and-inter/"
+    #     "./clustering_results/kMeans/shot/complete-intra-inter/"
+    #     , "./clustering_results/kMeans/shot/normalized-intra-inter/"
+    #     , "./clustering_results/kMeans/video/complete-intra-inter/"
+    #     , "./clustering_results/kMeans/video/normalized-intra-inter/"
     # ]
     # for directory_path in directory_path_list:
     #     generate_distribution_csv_files(directory_path)
 
+    # generate_mean_average_precision_category_per_cluster_csv_files
+    # map_directory_path_list = [
+    #     "./mean-average-precision/kMeans/shot/complete-intra-inter/category-per-cluster/"
+    #     , "./mean-average-precision/kMeans/shot/normalized-intra-inter/category-per-cluster/"
+    #     , "./mean-average-precision/kMeans/video/complete-intra-inter/category-per-cluster/"
+    #     , "./mean-average-precision/kMeans/video/normalized-intra-inter/category-per-cluster/"
+    # ]
+    # for map_directory_path in map_directory_path_list:
+    #     generate_mean_average_precision_category_per_cluster_csv_files(map_directory_path)
+
+    # generate_mean_average_precision_cluster_per_category_csv_files
     map_directory_path_list = [
-        "category-distribution-per-cluster/"
-        , "./clustering_results/k_means/shots/normalized-intra-and-inter/category-distribution-per-cluster/"
-        , "./clustering_results/k_means/videos/not-normalized-intra-and-inter/category-distribution-per-cluster/"
-        , "./clustering_results/k_means/videos/normalized-intra-and-inter/category-distribution-per-cluster/"
+        "./mean-average-precision/kMeans/shot/complete-intra-inter/cluster-per-category/"
+        , "./mean-average-precision/kMeans/shot/normalized-intra-inter/cluster-per-category/"
+        , "./mean-average-precision/kMeans/video/complete-intra-inter/cluster-per-category/"
+        , "./mean-average-precision/kMeans/video/normalized-intra-inter/cluster-per-category/"
     ]
-    generate_mean_average_precision_csv_files("category-distribution-per-cluster/")
+    for map_directory_path in map_directory_path_list:
+        generate_mean_average_precision_cluster_per_category_csv_files(map_directory_path)
 
 
 main()

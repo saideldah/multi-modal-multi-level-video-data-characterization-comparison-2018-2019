@@ -70,6 +70,8 @@ def fill_features_data(features_file_path):
         video = VideoClusterResult()
 
         for row in reader:
+            if iteration > data_set_count:
+                break
             if iteration > 0:
                 video_name = row[0]
                 shot_number = row[1]
@@ -96,8 +98,8 @@ def fill_features_data(features_file_path):
     return video_list
 
 
-def merge_features_with_clustering_results_not_normalized(features_file_path, clustering_results_file_path,
-                                                          out_put_file_path):
+def merge_features_with_clustering_results_complete(features_file_path, clustering_results_file_path,
+                                                    out_put_file_path):
     clustering_result_data = fill_clustering_results_data(clustering_results_file_path)
     features_data = fill_features_data(features_file_path)
     print "creating csv file..."
@@ -224,7 +226,7 @@ def merge_features_with_clustering_results_normalized(features_file_path, cluste
         print("csv file has been created successfully")
 
 
-def generate_shot_merged_files_not_normalized():
+def generate_shot_merged_files_complete():
     features_file_path = "./features/shot_features.csv"
     clustering_results_file_path = "./clustering_results/kMeans/shot/complete-intra-inter/"
     output_file_path = "./mean-average-precision/kMeans/shot/complete-intra-inter/merged-with-features/"
@@ -233,9 +235,9 @@ def generate_shot_merged_files_not_normalized():
     for clustering_result_file_name in clustering_results_file_name_list:
         if clustering_result_file_name != "merged-with-features":
             print ("generating " + clustering_result_file_name)
-            merge_features_with_clustering_results_not_normalized(features_file_path,
-                                                                  clustering_results_file_path + clustering_result_file_name
-                                                                  , output_file_path + clustering_result_file_name)
+            merge_features_with_clustering_results_complete(features_file_path,
+                                                            clustering_results_file_path + clustering_result_file_name
+                                                            , output_file_path + clustering_result_file_name)
             print ("---------------------------------------------------------------")
 
 
@@ -254,7 +256,7 @@ def generate_shot_merged_files_normalized():
             print ("---------------------------------------------------------------")
 
 
-def generate_video_merged_files_not_normalized():
+def generate_video_merged_files_complete():
     features_file_path = "./features/video_features.csv"
     clustering_results_file_path = "./clustering_results/kMeans/video/complete-intra-inter/"
     output_file_path = "./mean-average-precision/kMeans/video/complete-intra-inter/merged-with-features/"
@@ -263,9 +265,9 @@ def generate_video_merged_files_not_normalized():
     for clustering_result_file_name in clustering_results_file_name_list:
         if clustering_result_file_name != "merged-with-features":
             print ("generating " + clustering_result_file_name)
-            merge_features_with_clustering_results_not_normalized(features_file_path,
-                                                                  clustering_results_file_path + clustering_result_file_name
-                                                                  , output_file_path + clustering_result_file_name)
+            merge_features_with_clustering_results_complete(features_file_path,
+                                                            clustering_results_file_path + clustering_result_file_name
+                                                            , output_file_path + clustering_result_file_name)
             print ("---------------------------------------------------------------")
 
 
@@ -284,25 +286,25 @@ def generate_video_merged_files_normalized():
             print ("---------------------------------------------------------------")
 
 
-def generate_complete_video_merged_files_not_normalized():
+def generate_complete_video_merged_files_complete():
     features_file_path = "./features/complete_video_features.csv"
-    clustering_results_file_path = "./clustering_results/kMeans/video/complete-intra-inter/"
-    output_file_path = "./mean-average-precision/kMeans/video/complete-intra-inter/merged-with-features/"
+    clustering_results_file_path = "./clustering_results/kMeans/complete_video/complete-intra-inter/"
+    output_file_path = "./mean-average-precision/kMeans/complete_video/complete-intra-inter/merged-with-features/"
     clustering_results_file_name_list = utl.get_file_name_list(clustering_results_file_path)
 
     for clustering_result_file_name in clustering_results_file_name_list:
         if clustering_result_file_name != "merged-with-features":
             print ("generating " + clustering_result_file_name)
-            merge_features_with_clustering_results_not_normalized(features_file_path,
-                                                                  clustering_results_file_path + clustering_result_file_name
-                                                                  , output_file_path + clustering_result_file_name)
+            merge_features_with_clustering_results_complete(features_file_path,
+                                                            clustering_results_file_path + clustering_result_file_name
+                                                            , output_file_path + clustering_result_file_name)
             print ("---------------------------------------------------------------")
 
 
 def generate_complete_video_merged_files_normalized():
     features_file_path = "./features/normalized_complete_video_features.csv"
-    clustering_results_file_path = "./clustering_results/kMeans/video/normalized-intra-inter/"
-    output_file_path = "./mean-average-precision/kMeans/video/normalized-intra-inter/merged-with-features/"
+    clustering_results_file_path = "./clustering_results/kMeans/complete_video/normalized-intra-inter/"
+    output_file_path = "./mean-average-precision/kMeans/complete_video/normalized-intra-inter/merged-with-features/"
     clustering_results_file_name_list = utl.get_file_name_list(clustering_results_file_path)
 
     for clustering_result_file_name in clustering_results_file_name_list:
@@ -315,12 +317,12 @@ def generate_complete_video_merged_files_normalized():
 
 
 def main():
-    generate_shot_merged_files_not_normalized()
-    generate_video_merged_files_not_normalized()
-    generate_shot_merged_files_normalized()
-    generate_video_merged_files_normalized()
-    generate_complete_video_merged_files_not_normalized()
-    generate_complete_video_merged_files_normalized()
+    generate_shot_merged_files_complete()
+    # generate_video_merged_files_complete()
+    # generate_shot_merged_files_normalized()
+    # generate_video_merged_files_normalized()
+    # generate_complete_video_merged_files_complete()
+    # generate_complete_video_merged_files_normalized()
 
 
 main()
