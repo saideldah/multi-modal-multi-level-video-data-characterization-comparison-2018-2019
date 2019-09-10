@@ -1,9 +1,9 @@
 import combineLowLevelFeatures as combineLowLevelFeatures
 import utility
 
-input_directory_path = "C:/code/features/input/structure_analysis/dev/4/"
-output_directory_path = "C:/code/features/output/video/structure-analysis-video-dev/"
-shots_directory_path = "C:/code/features/input/shots_files/dev_normalized/"
+input_directory_path = "C:/code/features/input/structure_analysis/test/1/"
+output_directory_path = "C:/code/features/output/video/structure-analysis-video-test/"
+shots_directory_path = "C:/code/features/input/shots_files/test_normalized/"
 
 shot_file_name_list = utility.get_file_name_list(shots_directory_path)
 generated_files = utility.get_file_name_list(output_directory_path)

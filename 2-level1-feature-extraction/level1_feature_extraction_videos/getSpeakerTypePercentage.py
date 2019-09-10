@@ -29,7 +29,8 @@ def percentage_speaker(doc, start, end):
         # if utility.is_valid_shot(speaker_start, speaker_end, start, end):
         intersect = intersection(start, end, speaker_start, speaker_end)
         speaker_type = speaker_dict[idS]
-        percentage[speaker_type] = percentage[speaker_type] + intersect
+        if speaker_type != "":
+            percentage[speaker_type] = percentage[speaker_type] + intersect
 
     percentage['ponctuel'] = round(percentage['ponctuel'] * 100 / case_size, 2)
     percentage['localise'] = round(percentage['localise'] * 100 / case_size, 2)

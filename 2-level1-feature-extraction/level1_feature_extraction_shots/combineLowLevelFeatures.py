@@ -53,7 +53,6 @@ def generate_percentage_descriptors(input_xml_file, output_xml_file, shot_list):
     shot_descriptor_list = []
     input_dom_tree = xml.dom.minidom.parse(input_xml_file)
     category_element = input_dom_tree.getElementsByTagName("Category")
-    print category_element
     category = category_element[0].firstChild.nodeValue
     for shot_item in shot_list:
         start = shot_item["start"]
