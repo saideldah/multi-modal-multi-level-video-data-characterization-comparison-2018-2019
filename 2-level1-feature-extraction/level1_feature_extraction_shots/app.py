@@ -1,7 +1,7 @@
 import combineLowLevelFeatures as combineLowLevelFeatures
 import utility
 
-input_directory_path = "C:/code/features/input/structure_analysis/test/1/"
+input_directory_path = "C:/code/features/input/structure_analysis/test/4/"
 output_directory_path = "C:/code/features/output/shots/structure-analysis-shots-test/"
 shots_directory_path = "C:/code/features/input/shots_files/test_normalized/"
 
