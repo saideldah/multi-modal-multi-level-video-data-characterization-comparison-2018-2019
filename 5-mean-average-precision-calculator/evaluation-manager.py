@@ -188,6 +188,8 @@ class EvaluationManager:
 
             the_writer.writerow(headers)
             iteration = 1
+            clusters = collections.OrderedDict(
+                sorted(clusters.items()))
 
             for cluster_label, cluster_distribution_count in clusters.iteritems():
                 max_feature = max(cluster_distribution_count)
@@ -235,6 +237,8 @@ class EvaluationManager:
 
             the_writer.writerow(headers)
             iteration = 1
+            categories = collections.OrderedDict(
+                sorted(categories.items()))
 
             for category_label, category_distribution_score in categories.iteritems():
                 max_feature = max(category_distribution_score)
@@ -334,7 +338,8 @@ class EvaluationManager:
 
             the_writer.writerow(headers)
             iteration = 1
-
+            accuracy_list = collections.OrderedDict(
+                sorted(accuracy_list.items()))
             for file_name, accuracy in accuracy_list.iteritems():
                 vector = [file_name, accuracy]
                 the_writer.writerow(vector)
@@ -367,7 +372,8 @@ class EvaluationManager:
 
             the_writer.writerow(headers)
             iteration = 1
-
+            accuracy_list = collections.OrderedDict(
+                sorted(accuracy_list.items()))
             for file_name, accuracy in accuracy_list.iteritems():
                 vector = [file_name, accuracy]
                 the_writer.writerow(vector)
@@ -400,7 +406,8 @@ class EvaluationManager:
 
             the_writer.writerow(headers)
             iteration = 1
-
+            accuracy_list = collections.OrderedDict(
+                sorted(accuracy_list.items()))
             for file_name, accuracy in accuracy_list.iteritems():
                 vector = [file_name, accuracy]
                 the_writer.writerow(vector)
@@ -433,8 +440,11 @@ class EvaluationManager:
 
             the_writer.writerow(headers)
             iteration = 1
-
+            accuracy_list = collections.OrderedDict(
+                sorted(accuracy_list.items()))
             for file_name, accuracy in accuracy_list.iteritems():
+                file_name = file_name.replace("k_means", "").replace("birch", "").replace("mean_shift", "").replace(
+                    "db_scan", "")
                 vector = [file_name, accuracy]
                 the_writer.writerow(vector)
                 utl.print_progress_bar(iteration, max_value)
