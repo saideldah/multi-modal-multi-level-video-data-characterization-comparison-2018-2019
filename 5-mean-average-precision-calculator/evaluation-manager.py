@@ -20,6 +20,7 @@ class EvaluationManager:
         self.__input_file_path = self.__input_directory_path + self.__input_file_name
         self.__fill_clustering_result_set()
 
+    # region private
     def __fill_clustering_result_set(self):
         with open(self.__input_file_path) as f:
             self.__clustering_result_set_by_category_count = sum(1 for line in f) - 1
@@ -99,6 +100,49 @@ class EvaluationManager:
 
         return categories_per_cluster_statistics_dictionary
 
+    @staticmethod
+    def __get_accuracy_for_category_per_cluster(category_per_cluster_csv):
+        iteration = 0
+        with open(category_per_cluster_csv) as csvFile:
+            reader = csv.reader(csvFile)
+            clusters = {}
+            for row in reader:
+                if iteration > 0:
+                    cluster_label = row[0]
+                    category_distribution_count = EvaluationManager.__convert_to_float(row[1:len(row)])
+                    clusters[cluster_label] = category_distribution_count
+                iteration += 1
+        csvFile.close()
+        total_max_distribution = 0
+        total = 0
+        for cluster_label, category_distribution_count in clusters.iteritems():
+            total_max_distribution = total_max_distribution + max(category_distribution_count)
+            total = total + sum(category_distribution_count)
+        return float(total_max_distribution) / float(total)
+
+    @staticmethod
+    def __get_accuracy_for_cluster_per_category(cluster_per_category_csv):
+        iteration = 0
+        with open(cluster_per_category_csv) as csvFile:
+            reader = csv.reader(csvFile)
+            categories = {}
+            for row in reader:
+                if iteration > 0:
+                    category_label = row[0]
+                    cluster_distribution_count = EvaluationManager.__convert_to_float(row[1:len(row)])
+                    categories[category_label] = cluster_distribution_count
+                iteration += 1
+        csvFile.close()
+        total_max_distribution = 0
+        total = 0
+        for category_label, cluster_distribution_count in categories.iteritems():
+            total_max_distribution = total_max_distribution + max(cluster_distribution_count)
+            total = total + sum(cluster_distribution_count)
+        return float(total_max_distribution) / float(total)
+
+    # endregion
+
+    # region public
     def generate_cluster_distribution_per_category_csv(self):
 
         print "creating csv file..."
@@ -174,7 +218,7 @@ class EvaluationManager:
             for row in reader:
                 if iteration > 0:
                     cluster_label = row[0]
-                    cluster_distribution_count = EvaluationManager.__convert_to_float()
+                    cluster_distribution_count = EvaluationManager.__convert_to_float(row[1:len(row)])
                     clusters[cluster_label] = cluster_distribution_count
                 else:
                     categories = row[1: len(row)]
@@ -221,7 +265,7 @@ class EvaluationManager:
             for row in reader:
                 if iteration > 0:
                     category_label = row[0]
-                    category_distribution_score = EvaluationManager.__convert_to_float()
+                    category_distribution_score = EvaluationManager.__convert_to_float(row[1:len(row)])
                     categories[category_label] = category_distribution_score
                 else:
                     clusters = row[1: len(row)]
@@ -235,7 +279,7 @@ class EvaluationManager:
             headers = [
                 "category",
                 "cluster",
-                "score"
+                "precision"
             ]
 
             the_writer.writerow(headers)
@@ -254,36 +298,20 @@ class EvaluationManager:
             print("")
             print("csv file has been created successfully")
 
-    def get_accuracy_for_category_per_cluster(self):
-        iteration = 0
-        with open(self.__input_directory_path + file_name) as csvFile:
-            reader = csv.reader(csvFile)
-            clusters = {}
-            for row in reader:
-                if iteration > 0:
-                    cluster_label = row[0]
-                    category_distribution_count = EvaluationManager.__convert_to_float()
-                    clusters[cluster_label] = category_distribution_count
-                iteration += 1
-        csvFile.close()
-        total_max_distribution = 0
-        total = 0
-        for cluster_label, category_distribution_count in clusters.iteritems():
-            total_max_distribution = total_max_distribution + max(category_distribution_count)
-            total = total + sum(category_distribution_count)
-        return float(total_max_distribution) / float(total)
-
     def generate_accuracy_for_category_per_cluster_csv(self):
         print "generate_accuracy_for_category_per_cluster_csv..."
-        file_name_list = utl.get_file_name_list(self.__input_directory_path)
+        category_per_cluster_directory = self.__input_directory_path.replace("clustering_results",
+                                                                             "evaluation_results") \
+                                         + "category_per_cluster/"
+        file_name_list = utl.get_file_name_list(category_per_cluster_directory)
         accuracy_list = {}
         max_value = len(file_name_list)
         for file_name in file_name_list:
             key = file_name.replace(".csv", "")
-            accuracy_list[key] = EvaluationManager.get_accuracy_for_category_per_cluster(self.__input_directory_path,
-                                                                                         file_name)
+            category_per_cluster_csv = category_per_cluster_directory + file_name
+            accuracy_list[key] = EvaluationManager.__get_accuracy_for_category_per_cluster(category_per_cluster_csv)
 
-        output_path = self.__input_directory_path.replace("category_per_cluster/", "")
+        output_path = category_per_cluster_directory.replace("category_per_cluster/", "")
         with open(output_path + "accuracy_for_category_per_cluster.csv", 'wb') as f:
             the_writer = csv.writer(f)
             headers = [
@@ -303,36 +331,20 @@ class EvaluationManager:
             print("")
             print("csv file has been created successfully")
 
-    def __get_accuracy_for_cluster_per_category(self):
-        iteration = 0
-        with open(self.__input_directory_path + file_name) as csvFile:
-            reader = csv.reader(csvFile)
-            categories = {}
-            for row in reader:
-                if iteration > 0:
-                    category_label = row[0]
-                    cluster_distribution_count = EvaluationManager.__convert_to_float()
-                    categories[category_label] = cluster_distribution_count
-                iteration += 1
-        csvFile.close()
-        total_max_distribution = 0
-        total = 0
-        for category_label, cluster_distribution_count in categories.iteritems():
-            total_max_distribution = total_max_distribution + max(cluster_distribution_count)
-            total = total + sum(cluster_distribution_count)
-        return float(total_max_distribution) / float(total)
-
     def generate_accuracy_for_cluster_per_category_csv(self):
         print "generate_accuracy_for_category_per_cluster_csv..."
-        file_name_list = utl.get_file_name_list(self.__input_directory_path)
+        cluster_per_category_directory = self.__input_directory_path.replace("clustering_results",
+                                                                             "evaluation_results") \
+                                         + "cluster_per_category/"
+        file_name_list = utl.get_file_name_list(cluster_per_category_directory)
         accuracy_list = {}
         max_value = len(file_name_list)
         for file_name in file_name_list:
             key = file_name.replace(".csv", "")
-            accuracy_list[key] = EvaluationManager.get_accuracy_for_category_per_cluster(self.__input_directory_path,
-                                                                                         file_name)
+            cluster_per_category_csv = cluster_per_category_directory + file_name
+            accuracy_list[key] = EvaluationManager.__get_accuracy_for_cluster_per_category(cluster_per_category_csv)
 
-        output_path = self.__input_directory_path.replace("cluster_per_category/", "")
+        output_path = cluster_per_category_directory.replace("cluster_per_category/", "")
         with open(output_path + "accuracy_for_cluster_per_category.csv", 'wb') as f:
             the_writer = csv.writer(f)
             headers = [
@@ -351,3 +363,4 @@ class EvaluationManager:
             f.close()
             print("")
             print("csv file has been created successfully")
+    # endregion
