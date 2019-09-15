@@ -65,7 +65,7 @@ class ClusteringManager:
                 the_writer.writerow(vector)
             f.close()
 
-    def kMeans(self, output_file_path):
+    def k_means(self, output_file_path):
         print("KMeans Clustering in progress...")
         arr = np.array(self.__data_set)
         kMeans = KMeans(n_clusters=self.__number_of_clusters).fit(arr)
@@ -107,10 +107,10 @@ class ClusteringManager:
     def birch(self, output_file_path):
         print("birch Clustering in progress...")
         arr = np.array(self.__data_set)
-        birch_clus = Birch(branching_factor=50, n_clusters=self.__number_of_clusters, threshold=20,
+        birch_clustering = Birch(branching_factor=50, n_clusters=self.__number_of_clusters, threshold=20,
                            compute_labels=False) \
             .fit(arr)
-        labels = birch_clus.labels_
+        labels = birch_clustering.labels_
         print("Birch Clustering done!")
         print("generating Birch clustering csv")
         self.__generate_result_clustering_csv(labels, output_file_path)
@@ -144,33 +144,33 @@ def run_k_means():
         print("number_of_clusters =:" + str(number_of_clusters))
 
         # Video
-        # input_video_features = "./input/video_features.csv"
-        # complete_kMeans_output_file = "./clustering_results/kMeans/video/complete-intra-inter/" \
-        #                                      + str(number_of_clusters) + "_kMeans_video_clustering_results.csv"
-        # input_video_features_cm = ClusteringManager(input_video_features, number_of_clusters=number_of_clusters)
-        # input_video_features_cm.kMeans(complete_kMeans_output_file)
+        input_video_features = "./input/video_features.csv"
+        complete_k_means_output_file = "./clustering_results/kMeans/video/complete-intra-inter/" \
+                                      + str(number_of_clusters) + "_kMeans_video_clustering_results.csv"
+        input_video_features_cm = ClusteringManager(input_video_features, number_of_clusters=number_of_clusters)
+        input_video_features_cm.k_means(complete_k_means_output_file)
 
-        # input_normalized_video_features = "./input/normalized_video_features.csv"
-        # normalized_kMeans_output_file = "./clustering_results/kMeans/video/normalized-intra-inter/" \
-        #                                  + str(number_of_clusters) + "_kMeans_video_clustering_results.csv"
-        # input_video_features_cm = ClusteringManager(input_normalized_video_features,
-        #                                             number_of_clusters=number_of_clusters)
-        # input_video_features_cm.kMeans(normalized_kMeans_output_file)
+        input_normalized_video_features = "./input/normalized_video_features.csv"
+        normalized_k_means_output_file = "./clustering_results/kMeans/video/normalized-intra-inter/" \
+                                        + str(number_of_clusters) + "_kMeans_video_clustering_results.csv"
+        input_video_features_cm = ClusteringManager(input_normalized_video_features,
+                                                    number_of_clusters=number_of_clusters)
+        input_video_features_cm.k_means(normalized_k_means_output_file)
 
         # shot
 
-        # input_video_features = "./input/shot_features.csv"
-        # complete_kMeans_output_file = "./clustering_results/kMeans/shot/complete-intra-inter/" \
-        #                                      + str(number_of_clusters) + "_kMeans_shot_clustering_results.csv"
-        # input_video_features_cm = ClusteringManager(input_video_features, number_of_clusters=number_of_clusters)
-        # input_video_features_cm.kMeans(complete_kMeans_output_file)
-        # 
-        # input_normalized_video_features = "./input/normalized_shot_features.csv"
-        # normalized_kMeans_output_file = "./clustering_results/kMeans/shot/normalized-intra-inter/" \
-        #                                  + str(number_of_clusters) + "_kMeans_shot_clustering_results.csv"
-        # input_video_features_cm = ClusteringManager(input_normalized_video_features,
-        #                                             number_of_clusters=number_of_clusters)
-        # input_video_features_cm.kMeans(normalized_kMeans_output_file)
+        input_video_features = "./input/shot_features.csv"
+        complete_k_means_output_file = "./clustering_results/kMeans/shot/complete-intra-inter/" \
+                                             + str(number_of_clusters) + "_kMeans_shot_clustering_results.csv"
+        input_video_features_cm = ClusteringManager(input_video_features, number_of_clusters=number_of_clusters)
+        input_video_features_cm.k_means(complete_k_means_output_file)
+
+        input_normalized_video_features = "./input/normalized_shot_features.csv"
+        normalized_k_means_output_file = "./clustering_results/kMeans/shot/normalized-intra-inter/" \
+                                         + str(number_of_clusters) + "_kMeans_shot_clustering_results.csv"
+        input_video_features_cm = ClusteringManager(input_normalized_video_features,
+                                                    number_of_clusters=number_of_clusters)
+        input_video_features_cm.k_means(normalized_k_means_output_file)
 
         # complete_video_features
 
@@ -178,14 +178,14 @@ def run_k_means():
         complete_k_means_output_file = "./clustering_results/kMeans/complete_video/complete-intra-inter/" \
                                        + str(number_of_clusters) + "_k_means.csv"
         input_video_features_cm = ClusteringManager(input_video_features, number_of_clusters=number_of_clusters)
-        input_video_features_cm.kMeans(complete_k_means_output_file)
+        input_video_features_cm.k_means(complete_k_means_output_file)
 
         input_normalized_video_features = "./input/normalized_complete_video_features.csv"
         normalized_k_means_output_file = "./clustering_results/kMeans/complete_video/normalized-intra-inter/" \
                                          + str(number_of_clusters) + "_k_means.csv"
         input_video_features_cm = ClusteringManager(input_normalized_video_features,
                                                     number_of_clusters=number_of_clusters)
-        input_video_features_cm.kMeans(normalized_k_means_output_file)
+        input_video_features_cm.k_means(normalized_k_means_output_file)
 
 
 def run_db_scan():
