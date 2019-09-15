@@ -56,7 +56,7 @@ def get_mean_variance_patches(all_patches_segment):
 
 def get_key_frames_inter_intra_segments_intensity_variation(doc, start, end):
     # in this method we calculate the inter and intra segment variation of the intensity colors over the patches
-    # we compute also the number of transitions from one shot to another shot inside a segment
+    # we compute also the number of transitions from one complete_video to another complete_video inside a segment
     shot_list = doc.getElementsByTagName("Shot")
 
     duration = float(doc.getElementsByTagName("Duration")[0].childNodes[0].data)

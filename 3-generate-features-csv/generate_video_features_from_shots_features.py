@@ -1,4 +1,4 @@
-# in this file we will generate feature set by taking the average of shot feature for each video
+# in this file we will generate feature set by taking the average of complete_video feature for each video
 
 import utility as utl
 import csv

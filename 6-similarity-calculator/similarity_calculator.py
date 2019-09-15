@@ -217,7 +217,7 @@ class SimilarityCalculator:
         #    row = v1 shots
         #    col = v2 shots
         # 2- fill the matrix as the following
-        #       if shot is in common cluster then 0
+        #       if complete_video is in common cluster then 0
         #       else calculate distance
         # 3- for each zero that is not in removed col and row, remove the col and row
         #   for each element that is not belong to removed col or row:

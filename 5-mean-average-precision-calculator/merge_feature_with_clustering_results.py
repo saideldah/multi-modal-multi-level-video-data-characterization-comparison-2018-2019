@@ -228,8 +228,8 @@ def merge_features_with_clustering_results_normalized(features_file_path, cluste
 
 def generate_shot_merged_files_complete():
     features_file_path = "./features/shot_features.csv"
-    clustering_results_file_path = "./clustering_results/kMeans/shot/complete-intra-inter/"
-    output_file_path = "./mean-average-precision/kMeans/shot/complete-intra-inter/merged-with-features/"
+    clustering_results_file_path = "./clustering_results/k_means/complete_video/complete-intra-inter/"
+    output_file_path = "./mean-average-precision/k_means/complete_video/complete-intra-inter/merged-with-features/"
     clustering_results_file_name_list = utl.get_file_name_list(clustering_results_file_path)
 
     for clustering_result_file_name in clustering_results_file_name_list:
@@ -243,8 +243,8 @@ def generate_shot_merged_files_complete():
 
 def generate_shot_merged_files_normalized():
     features_file_path = "./features/normalized_shot_features.csv"
-    clustering_results_file_path = "./clustering_results/kMeans/shot/normalized-intra-inter/"
-    output_file_path = "./mean-average-precision/kMeans/shot/normalized-intra-inter/merged-with-features/"
+    clustering_results_file_path = "./clustering_results/k_means/complete_video/normalized-intra-inter/"
+    output_file_path = "./mean-average-precision/k_means/complete_video/normalized-intra-inter/merged-with-features/"
     clustering_results_file_name_list = utl.get_file_name_list(clustering_results_file_path)
 
     for clustering_result_file_name in clustering_results_file_name_list:
@@ -258,8 +258,8 @@ def generate_shot_merged_files_normalized():
 
 def generate_video_merged_files_complete():
     features_file_path = "./features/video_features.csv"
-    clustering_results_file_path = "./clustering_results/kMeans/video/complete-intra-inter/"
-    output_file_path = "./mean-average-precision/kMeans/video/complete-intra-inter/merged-with-features/"
+    clustering_results_file_path = "./clustering_results/k_means/video/complete-intra-inter/"
+    output_file_path = "./mean-average-precision/k_means/video/complete-intra-inter/merged-with-features/"
     clustering_results_file_name_list = utl.get_file_name_list(clustering_results_file_path)
 
     for clustering_result_file_name in clustering_results_file_name_list:
@@ -273,8 +273,8 @@ def generate_video_merged_files_complete():
 
 def generate_video_merged_files_normalized():
     features_file_path = "./features/normalized_video_features.csv"
-    clustering_results_file_path = "./clustering_results/kMeans/video/normalized-intra-inter/"
-    output_file_path = "./mean-average-precision/kMeans/video/normalized-intra-inter/merged-with-features/"
+    clustering_results_file_path = "./clustering_results/k_means/video/normalized-intra-inter/"
+    output_file_path = "./mean-average-precision/k_means/video/normalized-intra-inter/merged-with-features/"
     clustering_results_file_name_list = utl.get_file_name_list(clustering_results_file_path)
 
     for clustering_result_file_name in clustering_results_file_name_list:
@@ -288,8 +288,8 @@ def generate_video_merged_files_normalized():
 
 def generate_complete_video_merged_files_complete():
     features_file_path = "./features/complete_video_features.csv"
-    clustering_results_file_path = "./clustering_results/kMeans/complete_video/complete-intra-inter/"
-    output_file_path = "./mean-average-precision/kMeans/complete_video/complete-intra-inter/merged-with-features/"
+    clustering_results_file_path = "./clustering_results/k_means/complete_video/complete-intra-inter/"
+    output_file_path = "./mean-average-precision/k_means/complete_video/complete-intra-inter/merged-with-features/"
     clustering_results_file_name_list = utl.get_file_name_list(clustering_results_file_path)
 
     for clustering_result_file_name in clustering_results_file_name_list:
@@ -303,8 +303,8 @@ def generate_complete_video_merged_files_complete():
 
 def generate_complete_video_merged_files_normalized():
     features_file_path = "./features/normalized_complete_video_features.csv"
-    clustering_results_file_path = "./clustering_results/kMeans/complete_video/normalized-intra-inter/"
-    output_file_path = "./mean-average-precision/kMeans/complete_video/normalized-intra-inter/merged-with-features/"
+    clustering_results_file_path = "./clustering_results/k_means/complete_video/normalized-intra-inter/"
+    output_file_path = "./mean-average-precision/k_means/complete_video/normalized-intra-inter/merged-with-features/"
     clustering_results_file_name_list = utl.get_file_name_list(clustering_results_file_path)
 
     for clustering_result_file_name in clustering_results_file_name_list:

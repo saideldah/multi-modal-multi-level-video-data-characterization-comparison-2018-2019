@@ -159,9 +159,9 @@ def run_k_means():
 
         input_video_features_cm.k_means(number_of_clusters, normalized_k_means_output_file)
 
-        # shot
+        # complete_video
 
-        normalized_k_means_output_file = "./clustering_results/k_means/shot/" \
+        normalized_k_means_output_file = "./clustering_results/k_means/complete_video/" \
                                          + str(number_of_clusters) + "_k_means.csv"
         input_shot_features_cm.k_means(number_of_clusters, normalized_k_means_output_file)
 
@@ -205,9 +205,9 @@ def run_birch():
 
         input_video_features_cm.birch(number_of_clusters, normalized_birch_output_file)
 
-        # shot
+        # complete_video
 
-        # normalized_birch_output_file = "./clustering_results/birch/shot/" \
+        # normalized_birch_output_file = "./clustering_results/birch/complete_video/" \
         #                                  + str(number_of_clusters) + "_birch.csv"
         # input_shot_features_cm.birch(number_of_clusters, normalized_birch_output_file)
 
@@ -250,22 +250,24 @@ def run_db_scan():
 
 
 def run_mean_shift():
-    input_normalized_video_features = "./input/normalized_video_features.csv"
+    print "complete_video_features"
+    # input_normalized_video_features = "./input/normalized_video_features.csv"
+    #
+    # input_video_features_cm = ClusteringManager(input_normalized_video_features)
+    #
+    # bandwidth = 5
+    # for i in range(10):
+    #     print("-----------------------------------------------")
+    #
+    #     print("bandwidth =" + str(bandwidth))
+    #
+    #     # Video
+    #     normalized_mean_shift_output_file = "./clustering_results/mean_shift/video/" \
+    #                                         + str(bandwidth) + "_mean_shift.csv"
+    #     input_video_features_cm.mean_shift(bandwidth, normalized_mean_shift_output_file)
+    #     bandwidth += 5
 
-    input_video_features_cm = ClusteringManager(input_normalized_video_features)
-
-    bandwidth = 5
-    for i in range(10):
-        print("-----------------------------------------------")
-
-        print("bandwidth =" + str(bandwidth))
-
-        # Video
-        normalized_mean_shift_output_file = "./clustering_results/mean_shift/video/" \
-                                            + str(bandwidth) + "_mean_shift.csv"
-        input_video_features_cm.mean_shift(bandwidth, normalized_mean_shift_output_file)
-        bandwidth += 5
-
+    print "complete_video_features"
     input_normalized_video_features = "./input/normalized_complete_video_features.csv"
     input_video_features_cm = ClusteringManager(input_normalized_video_features)
     bandwidth = 25

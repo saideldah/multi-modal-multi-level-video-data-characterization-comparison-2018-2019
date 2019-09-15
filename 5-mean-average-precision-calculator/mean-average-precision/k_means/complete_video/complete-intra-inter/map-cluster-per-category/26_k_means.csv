@@ -1,0 +1,27 @@
+category,cluster,score
+art,cluster 2,0.09022556390977443
+movies_and_television,cluster 10,0.17472118959107807
+web_development_and_sites,cluster 0,0.24324324324324326
+politics,cluster 20,0.21283783783783783
+music_and_entertainment,cluster 23,0.19937694704049844
+technology,cluster 0,0.17955112219451372
+educational,cluster 7,0.2305084745762712
+religion,cluster 19,0.28957528957528955
+travel,cluster 17,0.14
+sports,cluster 23,0.12562814070351758
+the_environment,cluster 7,0.30612244897959184
+school_and_education,cluster 7,0.3018867924528302
+health,cluster 6,0.11494252873563218
+citizen_journalism,cluster 7,0.19083969465648856
+personal_or_auto-biographical,cluster 23,0.35294117647058826
+food_and_drink,cluster 24,0.1282051282051282
+conferences_and_other_events,cluster 19,0.2054794520547945
+gaming,cluster 25,0.11818181818181818
+literature,cluster 13,0.2891566265060241
+business,cluster 19,0.2235294117647059
+the_mainstream_media,cluster 24,0.19540229885057472
+autos_and_vehicles,cluster 3,0.42857142857142855
+comedy,cluster 7,0.1888111888111888
+default_category,cluster 23,0.1
+videoblogging,cluster 10,0.1115702479338843
+documentary,cluster 15,0.10185185185185185

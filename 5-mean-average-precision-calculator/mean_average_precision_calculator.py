@@ -398,30 +398,24 @@ def generate_mean_average_precision_cluster_per_category_csv_files(directory_pat
         print ("---------------------------------------------------------------")
 
 
-def main():
+def run_k_means():
     # print "generate_distribution_csv_files"
-    # directory_path_list = [
-    #     "./clustering_results/kMeans/shot/complete-intra-inter/",
-    #     "./clustering_results/kMeans/shot/normalized-intra-inter/",
-    #     "./clustering_results/kMeans/video/complete-intra-inter/",
-    #     "./clustering_results/kMeans/video/normalized-intra-inter/",
-    #     "./clustering_results/kMeans/complete_video/complete-intra-inter/",
-    #     "./clustering_results/kMeans/complete_video/normalized-intra-inter/"
-    # ]
-    # for directory_path in directory_path_list:
-    #     generate_distribution_csv_files(directory_path)
-    #
-    # print "--------------------------------------------------------------"
-    # # generate_mean_average_precision_category_per_cluster_csv_files
-    # print "generate_mean_average_precision_category_per_cluster_csv_files"
+    directory_path_list = [
+        "./clustering_results/k_means/complete_video/",
+        "./clustering_results/k_means/video/",
+        "./clustering_results/k_means/shot/"
+    ]
+    for directory_path in directory_path_list:
+        generate_distribution_csv_files(directory_path)
+
+    print "--------------------------------------------------------------"
+    # generate_mean_average_precision_category_per_cluster_csv_files
+    print "generate_mean_average_precision_category_per_cluster_csv_files"
 
     category_per_cluster_directory_path_list = [
-        "./mean-average-precision/kMeans/shot/complete-intra-inter/category-per-cluster/",
-        "./mean-average-precision/kMeans/shot/normalized-intra-inter/category-per-cluster/",
-        "./mean-average-precision/kMeans/video/complete-intra-inter/category-per-cluster/",
-        "./mean-average-precision/kMeans/video/normalized-intra-inter/category-per-cluster/",
-        "./mean-average-precision/kMeans/complete_video/complete-intra-inter/category-per-cluster/",
-        "./mean-average-precision/kMeans/complete_video/normalized-intra-inter/category-per-cluster/"
+        "./mean-average-precision/k_means/complete_video/category-per-cluster/",
+        "./mean-average-precision/k_means/video/category-per-cluster/",
+        "./mean-average-precision/k_means/shot/category-per-cluster/"
     ]
     for directory_path in category_per_cluster_directory_path_list:
         generate_mean_average_precision_category_per_cluster_csv_files(directory_path)
@@ -430,17 +424,17 @@ def main():
     print "--------------------------------------------------------------"
     print "generate_mean_average_precision_cluster_per_category_csv_files"
     cluster_per_category_directory_path_list = [
-        "./mean-average-precision/kMeans/shot/complete-intra-inter/cluster-per-category/",
-        "./mean-average-precision/kMeans/shot/normalized-intra-inter/cluster-per-category/",
-        "./mean-average-precision/kMeans/video/complete-intra-inter/cluster-per-category/",
-        "./mean-average-precision/kMeans/video/normalized-intra-inter/cluster-per-category/",
-        "./mean-average-precision/kMeans/complete_video/complete-intra-inter/cluster-per-category/",
-        "./mean-average-precision/kMeans/complete_video/normalized-intra-inter/cluster-per-category/"
+        "./mean-average-precision/k_means/complete_video/cluster-per-category/",
+        "./mean-average-precision/k_means/video/cluster-per-category/",
+        "./mean-average-precision/k_means/shot/cluster-per-category/"
     ]
     for directory_path in cluster_per_category_directory_path_list:
         generate_mean_average_precision_cluster_per_category_csv_files(directory_path)
         MeanAveragePrecisionCalculator.generate_accuracy_for_cluster_per_category_csv(directory_path)
 
+
+def main():
+    run_k_means()
 
 
 main()
