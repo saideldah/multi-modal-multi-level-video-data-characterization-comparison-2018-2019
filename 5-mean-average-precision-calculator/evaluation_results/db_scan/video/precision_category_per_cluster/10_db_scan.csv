@@ -1,11 +1,11 @@
 cluster,category,precision
-1,the_mainstream_media,1.0
-0,travel,0.21052631578947367
-3,citizen_journalism,0.75
-2,citizen_journalism,0.6153846153846154
 -1,travel,0.14547866460313952
+0,travel,0.21052631578947367
+1,the_mainstream_media,1.0
+2,citizen_journalism,0.6153846153846154
+3,citizen_journalism,0.75
 4,conferences_and_other_events,0.2857142857142857
-7,citizen_journalism,1.0
-6,citizen_journalism,1.0
 5,art,0.7142857142857143
+6,citizen_journalism,1.0
+7,citizen_journalism,1.0
 8,citizen_journalism,1.0

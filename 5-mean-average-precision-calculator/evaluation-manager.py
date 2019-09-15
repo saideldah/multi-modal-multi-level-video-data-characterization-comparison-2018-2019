@@ -324,9 +324,13 @@ class EvaluationManager:
         accuracy_list = {}
         max_value = len(file_name_list)
         for file_name in file_name_list:
-            key = file_name.replace(".csv", "")
+            key = file_name.replace(".csv", "") \
+                .replace("_k_means", "") \
+                .replace("_birch", "") \
+                .replace("_mean_shift", "") \
+                .replace("_db_scan", "")
             category_per_cluster_csv = category_per_cluster_directory + file_name
-            accuracy_list[key] = EvaluationManager.__get_accuracy_for_category_per_cluster(category_per_cluster_csv)
+            accuracy_list[int(key)] = EvaluationManager.__get_accuracy_for_category_per_cluster(category_per_cluster_csv)
 
         output_path = category_per_cluster_directory.replace("category_per_cluster/", "")
         with open(output_path + "accuracy_for_category_per_cluster.csv", 'wb') as f:
@@ -340,8 +344,8 @@ class EvaluationManager:
             iteration = 1
             accuracy_list = collections.OrderedDict(
                 sorted(accuracy_list.items()))
-            for file_name, accuracy in accuracy_list.iteritems():
-                vector = [file_name, accuracy]
+            for key, accuracy in accuracy_list.iteritems():
+                vector = [key, accuracy]
                 the_writer.writerow(vector)
                 utl.print_progress_bar(iteration, max_value)
                 iteration += 1
@@ -358,9 +362,13 @@ class EvaluationManager:
         accuracy_list = {}
         max_value = len(file_name_list)
         for file_name in file_name_list:
-            key = file_name.replace(".csv", "")
+            key = file_name.replace(".csv", "") \
+                .replace("_k_means", "") \
+                .replace("_birch", "") \
+                .replace("_mean_shift", "") \
+                .replace("_db_scan", "")
             cluster_per_category_csv = cluster_per_category_directory + file_name
-            accuracy_list[key] = EvaluationManager.__get_accuracy_for_cluster_per_category(cluster_per_category_csv)
+            accuracy_list[int(key)] = EvaluationManager.__get_accuracy_for_cluster_per_category(cluster_per_category_csv)
 
         output_path = cluster_per_category_directory.replace("cluster_per_category/", "")
         with open(output_path + "accuracy_for_cluster_per_category.csv", 'wb') as f:
@@ -374,8 +382,8 @@ class EvaluationManager:
             iteration = 1
             accuracy_list = collections.OrderedDict(
                 sorted(accuracy_list.items()))
-            for file_name, accuracy in accuracy_list.iteritems():
-                vector = [file_name, accuracy]
+            for key, accuracy in accuracy_list.iteritems():
+                vector = [key, accuracy]
                 the_writer.writerow(vector)
                 utl.print_progress_bar(iteration, max_value)
                 iteration += 1
@@ -392,9 +400,13 @@ class EvaluationManager:
         accuracy_list = {}
         max_value = len(file_name_list)
         for file_name in file_name_list:
-            key = file_name.replace(".csv", "")
+            key = file_name.replace(".csv", "") \
+                .replace("_k_means", "") \
+                .replace("_birch", "") \
+                .replace("_mean_shift", "") \
+                .replace("_db_scan", "")
             category_per_cluster_csv = precision_cluster_per_category_directory + file_name
-            accuracy_list[key] = EvaluationManager.__get_mean_average_precision(category_per_cluster_csv)
+            accuracy_list[int(key)] = EvaluationManager.__get_mean_average_precision(category_per_cluster_csv)
 
         output_path = precision_cluster_per_category_directory.replace("precision_cluster_per_category/", "")
         with open(output_path + "mean_average_precision_cluster_per_category.csv", 'wb') as f:
@@ -408,8 +420,8 @@ class EvaluationManager:
             iteration = 1
             accuracy_list = collections.OrderedDict(
                 sorted(accuracy_list.items()))
-            for file_name, accuracy in accuracy_list.iteritems():
-                vector = [file_name, accuracy]
+            for key, accuracy in accuracy_list.iteritems():
+                vector = [key, accuracy]
                 the_writer.writerow(vector)
                 utl.print_progress_bar(iteration, max_value)
                 iteration += 1
@@ -426,9 +438,13 @@ class EvaluationManager:
         accuracy_list = {}
         max_value = len(file_name_list)
         for file_name in file_name_list:
-            key = file_name.replace(".csv", "")
+            key = file_name.replace(".csv", "") \
+                .replace("_k_means", "") \
+                .replace("_birch", "") \
+                .replace("_mean_shift", "") \
+                .replace("_db_scan", "")
             category_per_cluster_csv = precision_category_per_cluster_directory + file_name
-            accuracy_list[key] = EvaluationManager.__get_mean_average_precision(category_per_cluster_csv)
+            accuracy_list[int(key)] = EvaluationManager.__get_mean_average_precision(category_per_cluster_csv)
 
         output_path = precision_category_per_cluster_directory.replace("precision_category_per_cluster/", "")
         with open(output_path + "mean_average_precision_category_per_cluster.csv", 'wb') as f:
@@ -442,10 +458,8 @@ class EvaluationManager:
             iteration = 1
             accuracy_list = collections.OrderedDict(
                 sorted(accuracy_list.items()))
-            for file_name, accuracy in accuracy_list.iteritems():
-                file_name = file_name.replace("k_means", "").replace("birch", "").replace("mean_shift", "").replace(
-                    "db_scan", "")
-                vector = [file_name, accuracy]
+            for key, accuracy in accuracy_list.iteritems():
+                vector = [key, accuracy]
                 the_writer.writerow(vector)
                 utl.print_progress_bar(iteration, max_value)
                 iteration += 1
