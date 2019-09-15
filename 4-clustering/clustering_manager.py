@@ -106,7 +106,7 @@ class ClusteringManager:
         arr = np.array(self.__data_set)
         birch_clustering = Birch(branching_factor=50, n_clusters=number_of_clusters, threshold=20,
                                  compute_labels=False).fit(arr)
-        labels = birch_clustering.labels_
+        labels = birch_clustering.predict(arr)
         print("Birch Clustering done!")
         print("generating Birch clustering csv")
         self.__generate_result_clustering_csv(labels, output_file_path)
@@ -201,7 +201,7 @@ def run_birch():
         # Video
 
         normalized_birch_output_file = "./clustering_results/birch/video/" \
-                                         + str(number_of_clusters) + "_birch.csv"
+                                       + str(number_of_clusters) + "_birch.csv"
 
         input_video_features_cm.birch(number_of_clusters, normalized_birch_output_file)
 
@@ -214,7 +214,7 @@ def run_birch():
         # complete_video_features
 
         normalized_birch_output_file = "./clustering_results/birch/complete_video/" \
-                                         + str(number_of_clusters) + "_birch.csv"
+                                       + str(number_of_clusters) + "_birch.csv"
         input_complete_video_features_cm.birch(number_of_clusters, normalized_birch_output_file)
 
 
@@ -262,7 +262,7 @@ def run_mean_shift():
 
         # Video
         normalized_mean_shift_output_file = "./clustering_results/mean_shift/video/" \
-                                         + str(bandwidth) + "_mean_shift.csv"
+                                            + str(bandwidth) + "_mean_shift.csv"
         input_video_features_cm.mean_shift(bandwidth, normalized_mean_shift_output_file)
         bandwidth += 5
 
@@ -275,15 +275,30 @@ def run_mean_shift():
 
         print("bandwidth =" + str(bandwidth))
         normalized_mean_shift_output_file = "./clustering_results/mean_shift/complete_video/" \
-                                         + str(bandwidth) + "_mean_shift.csv"
+                                            + str(bandwidth) + "_mean_shift.csv"
         input_video_features_cm.mean_shift(bandwidth, normalized_mean_shift_output_file)
         bandwidth += 5
 
 
 def main():
-    run_k_means()
-    run_db_scan()
-    run_birch()
+    print "1 = k_means"
+    print "2 = db_scan"
+    print "3 = birch"
+    print "4 = mean_shift"
+    input_option = raw_input("Enter your input:")
+
+    if input_option == "1":
+        print "1 = k_means"
+        run_k_means()
+    if input_option == "2":
+        print "2 = db_scan"
+        run_db_scan()
+    if input_option == "3":
+        print "3 = birch"
+        run_birch()
+    if input_option == "4":
+        print "4 = mean_shift"
+        run_mean_shift()
 
 
 main()
