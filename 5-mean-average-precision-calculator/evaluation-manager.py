@@ -121,6 +121,20 @@ class EvaluationManager:
         return float(total_max_distribution) / float(total)
 
     @staticmethod
+    def __get_mean_average_precision(category_per_cluster_csv):
+        iteration = 0
+        precision_sum = 0
+        count = 0
+        with open(category_per_cluster_csv) as csvFile:
+            reader = csv.reader(csvFile)
+            for row in reader:
+                if iteration > 0:
+                    precision_sum += float(row[1])
+                    count += 1
+        csvFile.close()
+        return float(precision_sum) / float(count)
+
+    @staticmethod
     def __get_accuracy_for_cluster_per_category(cluster_per_category_csv):
         iteration = 0
         with open(cluster_per_category_csv) as csvFile:
@@ -291,6 +305,72 @@ class EvaluationManager:
                 index_of_max_feature = category_distribution_score.index(max_feature)
                 score = max_feature / total
                 vector = [category_label, clusters[index_of_max_feature], score]
+                the_writer.writerow(vector)
+                utl.print_progress_bar(iteration, max_value)
+                iteration += 1
+            f.close()
+            print("")
+            print("csv file has been created successfully")
+
+    def generate_mean_average_precision_cluster_per_category_csv(self):
+        print "generate_accuracy_for_category_per_cluster_csv..."
+        precision_cluster_directory = self.__input_directory_path.replace("clustering_results",
+                                                                          "evaluation_results") \
+                                      + "precision_cluster_per_category/"
+        file_name_list = utl.get_file_name_list(precision_cluster_directory)
+        accuracy_list = {}
+        max_value = len(file_name_list)
+        for file_name in file_name_list:
+            key = file_name.replace(".csv", "")
+            category_per_cluster_csv = precision_cluster_directory + file_name
+            accuracy_list[key] = EvaluationManager.__get_mean_average_precision(category_per_cluster_csv)
+
+        output_path = precision_cluster_directory.replace("precision_cluster_per_category/", "")
+        with open(output_path + "mean_average_precision_for_category_per_cluster.csv", 'wb') as f:
+            the_writer = csv.writer(f)
+            headers = [
+                "file_name",
+                "map",
+            ]
+
+            the_writer.writerow(headers)
+            iteration = 1
+
+            for file_name, accuracy in accuracy_list.iteritems():
+                vector = [file_name, accuracy]
+                the_writer.writerow(vector)
+                utl.print_progress_bar(iteration, max_value)
+                iteration += 1
+            f.close()
+            print("")
+            print("csv file has been created successfully")
+
+    def generate_mean_average_precision_cluster_per_category_csv(self):
+        print "generate_accuracy_for_category_per_cluster_csv..."
+        precision_cluster_directory = self.__input_directory_path.replace("clustering_results",
+                                                                          "evaluation_results") \
+                                      + "precision_cluster_per_category/"
+        file_name_list = utl.get_file_name_list(precision_cluster_directory)
+        accuracy_list = {}
+        max_value = len(file_name_list)
+        for file_name in file_name_list:
+            key = file_name.replace(".csv", "")
+            category_per_cluster_csv = precision_cluster_directory + file_name
+            accuracy_list[key] = EvaluationManager.__get_mean_average_precision(category_per_cluster_csv)
+
+        output_path = precision_cluster_directory.replace("precision_cluster_per_category/", "")
+        with open(output_path + "mean_average_precision_for_category_per_cluster.csv", 'wb') as f:
+            the_writer = csv.writer(f)
+            headers = [
+                "file_name",
+                "map",
+            ]
+
+            the_writer.writerow(headers)
+            iteration = 1
+
+            for file_name, accuracy in accuracy_list.iteritems():
+                vector = [file_name, accuracy]
                 the_writer.writerow(vector)
                 utl.print_progress_bar(iteration, max_value)
                 iteration += 1
