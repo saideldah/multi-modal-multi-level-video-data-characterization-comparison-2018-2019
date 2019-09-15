@@ -1,6 +1,7 @@
 import utility as utl
 import csv
 import collections
+import os
 
 
 class EvaluationManager:
@@ -422,7 +423,7 @@ class EvaluationManager:
             category_per_cluster_csv = precision_category_per_cluster_directory + file_name
             accuracy_list[key] = EvaluationManager.__get_mean_average_precision(category_per_cluster_csv)
 
-        output_path = precision_category_per_cluster_directory.replace("precision_cluster_per_category/", "")
+        output_path = precision_category_per_cluster_directory.replace("precision_category_per_cluster/", "")
         with open(output_path + "mean_average_precision_category_per_cluster.csv", 'wb') as f:
             the_writer = csv.writer(f)
             headers = [
@@ -449,7 +450,7 @@ class EvaluationManager:
     def generate_distribution_files(self, file_name):
         self.__fill_clustering_result_set(file_name)
         self.__generate_cluster_distribution_per_category_csv(file_name)
-        self.__generate_cluster_distribution_per_category_csv(file_name)
+        self.__generate_category_distribution_per_cluster_csv(file_name)
 
     def generate_precision_files(self, file_name):
         self.__generate_precision_category_per_cluster_csv(file_name)
@@ -465,6 +466,14 @@ class EvaluationManager:
     # endregion
 
 
+def clear(directory):
+    print directory
+    for parent, dirnames, filenames in os.walk(directory):
+        for fn in filenames:
+            if fn.lower().endswith('.csv'):
+                os.remove(os.path.join(parent, fn))
+
+
 def main():
     # print "generate_distribution_csv_files"
     directory_path_list = [
@@ -478,6 +487,8 @@ def main():
         "./clustering_results/mean_shift/complete_video/",
         "./clustering_results/mean_shift/video/"
     ]
+    clear("./evaluation_results")
+
     for directory_path in directory_path_list:
         evaluation_manager = EvaluationManager(directory_path)
 
