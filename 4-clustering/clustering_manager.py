@@ -251,26 +251,26 @@ def run_db_scan():
 
 def run_mean_shift():
     print "complete_video_features"
-    # input_normalized_video_features = "./input/normalized_video_features.csv"
-    #
-    # input_video_features_cm = ClusteringManager(input_normalized_video_features)
-    #
-    # bandwidth = 5
-    # for i in range(10):
-    #     print("-----------------------------------------------")
-    #
-    #     print("bandwidth =" + str(bandwidth))
-    #
-    #     # Video
-    #     normalized_mean_shift_output_file = "./clustering_results/mean_shift/video/" \
-    #                                         + str(bandwidth) + "_mean_shift.csv"
-    #     input_video_features_cm.mean_shift(bandwidth, normalized_mean_shift_output_file)
-    #     bandwidth += 5
+    input_normalized_video_features = "./input/normalized_video_features.csv"
+
+    input_video_features_cm = ClusteringManager(input_normalized_video_features)
+
+    bandwidth = 55
+    for i in range(10):
+        print("-----------------------------------------------")
+
+        print("bandwidth =" + str(bandwidth))
+
+        # Video
+        normalized_mean_shift_output_file = "./clustering_results/mean_shift/video/" \
+                                            + str(bandwidth) + "_mean_shift.csv"
+        input_video_features_cm.mean_shift(bandwidth, normalized_mean_shift_output_file)
+        bandwidth += 5
 
     print "complete_video_features"
     input_normalized_video_features = "./input/normalized_complete_video_features.csv"
     input_video_features_cm = ClusteringManager(input_normalized_video_features)
-    bandwidth = 25
+    bandwidth = 75
     for i in range(10):
         # complete_video_features
         print("-----------------------------------------------")
