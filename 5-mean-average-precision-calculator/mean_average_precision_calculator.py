@@ -63,7 +63,7 @@ class MeanAveragePrecisionCalculator:
         return dataset_by_cluster, categories
 
     @staticmethod
-    def __calculate_cluster_distribution_per_category(list_of_clusters, list_of_category_clusters):
+    def __calculate_cluster_distribution_per_category(list_of_clusters, clusters_per_category):
         list_of_clusters.sort()
 
         clusters_dictionary = {}
@@ -71,7 +71,7 @@ class MeanAveragePrecisionCalculator:
         for cluster in list_of_clusters:
             clusters_dictionary[str(cluster)] = 0
 
-        for cluster in list_of_category_clusters:
+        for cluster in clusters_per_category:
             clusters_dictionary[cluster] += 1
 
         return clusters_dictionary
@@ -105,7 +105,7 @@ class MeanAveragePrecisionCalculator:
             ]
             clusters.sort()
             for cluster in clusters:
-                headers.append("cluster " + str(cluster))
+                headers.append(str(cluster))
                 # print str(cluster)
             the_writer.writerow(headers)
             iteration = 1
@@ -368,8 +368,8 @@ def generate_distribution_csv_files(directory_path):
     clustering_results_file_name_list = utl.get_file_name_list(directory_path)
     for file_name in clustering_results_file_name_list:
         if file_name != "merged-with-features" \
-                and file_name != "cluster-distribution-per-category" \
-                and file_name != "category-distribution-per-cluster":
+                and file_name != "cluster-per-category" \
+                and file_name != "category-per-cluster":
             print ("generating " + file_name)
             MeanAveragePrecisionCalculator.generate_cluster_distribution_per_category_csv(
                 directory_path,
