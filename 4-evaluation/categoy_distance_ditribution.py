@@ -150,7 +150,7 @@ def generate_category_feature_distribution(features_file_path, input_file_path, 
 
 
 def mean(numbers):
-    return float(sum(numbers)) / max(len(numbers), 1)
+    return float(sum(numbers)) / float(len(numbers))
 
 
 def get_category_self_distance_dictionary(features_file_path, category_average_file_path):
