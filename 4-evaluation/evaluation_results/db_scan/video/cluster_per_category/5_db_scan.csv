@@ -1,0 +1,27 @@
+category,cluster -1,cluster 0,cluster 1,cluster 2
+art,0,0,0,134
+autos_and_vehicles,0,0,0,7
+business,0,1,0,85
+citizen_journalism,1,4,0,126
+comedy,0,0,0,146
+conferences_and_other_events,0,0,0,74
+default_category,1,0,0,663
+documentary,0,0,0,109
+educational,0,0,0,296
+food_and_drink,0,0,0,78
+gaming,0,0,0,110
+health,0,0,1,87
+literature,0,0,0,83
+movies_and_television,0,0,0,272
+music_and_entertainment,0,0,1,321
+personal_or_auto-biographical,0,0,0,51
+politics,6,8,0,581
+religion,0,0,0,263
+school_and_education,0,0,0,53
+sports,0,0,2,197
+technology,0,0,0,407
+the_environment,0,0,0,49
+the_mainstream_media,0,0,0,89
+travel,0,0,0,50
+videoblogging,0,0,1,242
+web_development_and_sites,0,0,0,38
