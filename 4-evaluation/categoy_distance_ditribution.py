@@ -117,9 +117,9 @@ def get_category_features_dictionary(input_file_path):
     return category_features
 
 
-def generate_category_feature_distribution(input_file_path, output_file_path):
+def generate_category_feature_distribution(features_file_path, input_file_path, output_file_path):
     category_features = get_category_features_dictionary(input_file_path)
-
+    category_self_distance_dictionary = get_category_self_distance_dictionary(features_file_path, input_file_path)
     category_distance_dictionary = {}
     categories = []
     for category, category_feature_vector in category_features.iteritems():
@@ -128,7 +128,7 @@ def generate_category_feature_distribution(input_file_path, output_file_path):
             if category != category2:
                 dist = utl.calculate_distance(category_feature_vector, category_feature_vector2)
             else:
-                dist = 0
+                dist = category_self_distance_dictionary[category]
 
             category_distance_dictionary[category + "_" + category2] = dist
 
@@ -149,24 +149,61 @@ def generate_category_feature_distribution(input_file_path, output_file_path):
         f.close()
 
 
-def main():
-    input_output_list = [
-        ["./features/normalized_shot_features.csv", "category_average_shot_features.csv"],
-        ["./features/normalized_video_features.csv", "category_average_video_features.csv"],
-        ["./features/normalized_complete_video_features.csv", "category_average_complete_video_features.csv"]
-    ]
-    input_output_list2 = [
-        ["category_average_shot_features.csv", "category_shot_distance_distribution.csv"],
-        ["category_average_video_features.csv", "category_video_distance_distribution.csv"],
-        ["category_average_complete_video_features.csv", "category_complete_video_distance_distribution.csv"]
-    ]
-    for input_output in input_output_list:
-        print "generating " + input_output[1]
-        generate_category_feature(input_output[0], input_output[1])
+def mean(numbers):
+    return float(sum(numbers)) / max(len(numbers), 1)
 
+
+def get_category_self_distance_dictionary(features_file_path, category_average_file_path):
+    category_complete_features = get_category_features_dictionary_from_complete_features(
+        features_file_path)
+    category_average_features = get_category_features_dictionary(category_average_file_path)
+    category_distance_dictionary = {}
+    for category_name_average, category_average_feature_vector in category_average_features.iteritems():
+        category_distance_dictionary[category_name_average] = []
+        for category_complete_feature_vector in category_complete_features[category_name_average]:
+            distance = utl.calculate_distance(category_average_feature_vector, category_complete_feature_vector)
+            category_distance_dictionary[category_name_average].append(distance)
+    category_average_distance_dictionary = {}
+    for category, distance_list in category_distance_dictionary.iteritems():
+        category_average_distance_dictionary[category] = mean(distance_list)
+
+    return category_average_distance_dictionary
+
+
+def main():
+    # input_output_list = [
+    #     ["./features/normalized_shot_features.csv", "category_average_shot_features.csv"],
+    #     ["./features/normalized_video_features.csv", "category_average_video_features.csv"],
+    #     ["./features/normalized_complete_video_features.csv", "category_average_complete_video_features.csv"]
+    # ]
+    # for input_output in input_output_list:
+    #     print "generating " + input_output[1]
+    #     generate_category_feature(input_output[0], input_output[1])
+    #
+    input_output_list2 = [
+        ["./features/normalized_shot_features.csv", "category_average_shot_features.csv",
+         "category_shot_distance_distribution.csv"],
+        ["./features/normalized_video_features.csv", "category_average_video_features.csv",
+         "category_video_distance_distribution.csv"],
+        ["./features/normalized_complete_video_features.csv", "category_average_complete_video_features.csv",
+         "category_complete_video_distance_distribution.csv"]
+    ]
     for input_output in input_output_list2:
         print "generating " + input_output[1]
-        generate_category_feature_distribution(input_output[0], input_output[1])
+        generate_category_feature_distribution(input_output[0], input_output[1], input_output[2])
+
+    # input_output_list3 = [
+    #     ["./features/normalized_shot_features.csv", "category_average_shot_features.csv",
+    #      "category_shot_self_distance.csv"],
+    #     ["./features/normalized_video_features.csv", "category_average_video_features.csv",
+    #      "category_video_self_distance.csv"],
+    #     ["./features/normalized_complete_video_features.csv", "category_average_complete_video_features.csv",
+    #      "category_complete_video_self_distance.csv"]
+    # ]
+    # for input_output in input_output_list3:
+    #     print "generating " + input_output[1]
+    #     generate_category_self_distance_csv(input_output[0], input_output[1], input_output[2])
+    #     break
 
 
 main()
