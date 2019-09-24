@@ -154,6 +154,8 @@ class SimilarityCalculator:
     def __generate_distance_matrix(video1, video2):
         v1_shot_numbers = SimilarityCalculator.__get_video_shots(video1)
         v2_shots_numbers = SimilarityCalculator.__get_video_shots(video2)
+        row_count = len(v1_shot_numbers)
+        column_count = len(v2_shots_numbers)
         matrix = []
         for v1_shot_number in v1_shot_numbers:
             row = []
@@ -165,7 +167,24 @@ class SimilarityCalculator:
                     distance = utl.calculate_distance(v1_shot.features, v2_shot.features)
                 row.append(distance)
             matrix.append(row)
-        return matrix
+        return matrix, row_count, column_count
+
+    @staticmethod
+    def __generate_full_distance_matrix(video1, video2):
+        v1_shot_numbers = SimilarityCalculator.__get_video_shots(video1)
+        v2_shots_numbers = SimilarityCalculator.__get_video_shots(video2)
+        row_count = len(v1_shot_numbers)
+        column_count = len(v2_shots_numbers)
+        matrix = []
+        for v1_shot_number in v1_shot_numbers:
+            row = []
+            for v2_shot_number in v2_shots_numbers:
+                v1_shot = video1.shots[str(v1_shot_number)]
+                v2_shot = video2.shots[str(v2_shot_number)]
+                distance = utl.calculate_distance(v1_shot.features, v2_shot.features)
+                row.append(distance)
+            matrix.append(row)
+        return matrix, row_count, column_count
 
     @staticmethod
     def __get_audio_features(features):
@@ -237,6 +256,49 @@ class SimilarityCalculator:
                 removed_rows.append(row)
                 if distance != 0:
                     distance_score += distance
+        return distance_score
+
+    @staticmethod
+    def __calculate_similarity_distance_matrix_method_v2(video1, video2):
+        # 1- creat 2 dimensional array
+        #    row = v1 shots
+        #    col = v2 shots
+        # 2- fill the matrix as the following
+        #       calculate distance
+        # 3- for each element that is not belong to removed col or row:
+        #       search for the smallest value and remove the col and row
+        distance_matrix, row_count, column_count = SimilarityCalculator.__generate_full_distance_matrix(video1, video2)
+
+        linear_array = SimilarityCalculator.__convert_to_linear_array(distance_matrix)
+        linear_array.sort(key=lambda x: x[2])
+        removed_columns = []
+        removed_rows = []
+        distance_score = 0
+        # phase 1
+        for elem in linear_array:
+            row = elem[0]
+            col = elem[1]
+            distance = elem[2]
+            if row not in removed_rows and col not in removed_columns:
+                removed_columns.append(col)
+                removed_rows.append(row)
+                if distance != 0:
+                    distance_score += distance
+        miss_calculated_rows = []
+        miss_calculated_columns = []
+        for row in range(row_count):
+            if row not in removed_rows:
+                miss_calculated_rows.append(row)
+
+        for row in miss_calculated_rows:
+            distance_score += min(distance_matrix[row])
+
+        # special case solve it
+        # for col in range(column_count):
+        #     if col not in removed_columns:
+        #         miss_calculated_columns.append(col)
+        # for col in miss_calculated_rows:
+        #     distance_score += min(distance_matrix[row])
         return distance_score
 
     def generate_video_similarity_csv(self, method):
