@@ -4,7 +4,6 @@ import csv
 
 class Video:
     name = ""
-    clusters = {}
     category = ""
     shots = {}
 
@@ -14,7 +13,6 @@ class Video:
 
 class Shot:
     number = 0
-    cluster = ""
     features = []
 
     def __init__(self):
@@ -22,11 +20,11 @@ class Shot:
 
 
 class SimilarityCalculator:
-    def __init__(self, directory_path, file_name, out_put_file_name):
-        self.__file_name = file_name
+    def __init__(self, directory_path, input_file_name, out_put_file_name):
+        self.__file_name = input_file_name
         self.__directory_path = directory_path
         self.__out_put_file_name = out_put_file_name
-        self.__file_path = directory_path + file_name
+        self.__file_path = directory_path + input_file_name
         self.__video_list = SimilarityCalculator.__fill_video_list(self.__file_path)
 
     @staticmethod
@@ -53,22 +51,15 @@ class SimilarityCalculator:
                     video_name = row[0]
                     shot_number = row[1]
                     category_label = row[2]
-                    cluster_label = row[3]
-                    features = row[4:len(row)]
+                    features = row[3:len(row)]
                     if video.name == "":
                         video.category = category_label
                         video.name = video_name
                         video.clusters = {}
                         video.shots = {}
-
-                    if cluster_label not in video.clusters:
-                        video.clusters[cluster_label] = 0
-
-                    video.clusters[cluster_label] += 1
                     shot = Shot()
                     shot.features = SimilarityCalculator.__convert_to_float(features)
                     shot.number = int(shot_number)
-                    shot.cluster = cluster_label
                     video.shots[shot_number] = shot
 
                     if video.name != video_name:
@@ -305,29 +296,29 @@ class SimilarityCalculator:
             distance_score += min(complete_column)
         return distance_score
 
-    def generate_video_similarity_csv(self, method):
+    def generate_video_similarity_distance_csv(self, method):
 
         methods = {"shots_method": self.__calculate_similarity_common_shots_method,
                    "common_clusters_method": self.__calculate_similarity_common_clusters_method,
-                   "distance_matrix_method": self.__calculate_similarity_distance_matrix_method}
+                   "distance_matrix_method": self.__calculate_similarity_distance_matrix_method_v2}
         print "creating csv file..."
         with open(self.__directory_path + self.__out_put_file_name, 'wb') as f:
             the_writer = csv.writer(f)
             headers = [
-                "video 1",
-                "video 2",
-                "video 1 category",
-                "video 2 category",
-                "similarity score"
+                "v1",
+                "v2",
+                "v1 category",
+                "v2 category",
+                "distance"
             ]
             the_writer.writerow(headers)
             video_list_length = len(self.__video_list)
             max_value = video_list_length
-            max_value = 6
+            max_value = 20
             iteration = 1
 
             for i in range(video_list_length):
-                # print("calculate similarity for " + self.__video_list[i].name)
+                # print("calculate distance for " + self.__video_list[i].name)
                 # print ""
                 # iteration = 1
                 for j in range(i + 1, video_list_length):
@@ -335,11 +326,9 @@ class SimilarityCalculator:
                     v2 = self.__video_list[j]
                     video_similarity_row = [v1.name, v2.name, v1.category, v2.category]
 
-                    similarity = methods[method](v1, v2)
-                    video_similarity_row.append(similarity)
+                    distance = methods[method](v1, v2)
+                    video_similarity_row.append(distance)
                     the_writer.writerow(video_similarity_row)
-                    # utl.print_progress_bar(iteration, max_value - (i + 1))
-                    # iteration += 1
                 utl.print_progress_bar(iteration, max_value)
                 iteration += 1
                 if iteration > max_value:
@@ -350,79 +339,15 @@ class SimilarityCalculator:
             print("csv file has been created successfully")
 
 
-def calculate_similarity_distance_matrix_method_v2(distance_matrix, row_count, column_count):
-    linear_array = SimilarityCalculator.convert_to_linear_array(distance_matrix)
-    linear_array.sort(key=lambda x: x[2])
-    removed_columns = []
-    removed_rows = []
-    distance_score = 0
-    # phase 1
-    for elem in linear_array:
-        row = elem[0]
-        col = elem[1]
-        distance = elem[2]
-        if row not in removed_rows and col not in removed_columns:
-            removed_columns.append(col)
-            removed_rows.append(row)
-            if distance != 0:
-                distance_score += distance
-    miss_calculated_rows = []
-    miss_calculated_columns = []
-    for row in range(row_count):
-        if row not in removed_rows:
-            miss_calculated_rows.append(row)
-
-    for row in miss_calculated_rows:
-        distance_score += min(distance_matrix[row])
-
-    # special case solve it
-
-    for col in range(column_count):
-        if col not in removed_columns:
-            miss_calculated_columns.append(col)
-    for col in miss_calculated_columns:
-        complete_column = []
-        for row in range(row_count):
-            complete_column.append(distance_matrix[row][col])
-        distance_score += min(complete_column)
-    return distance_score
-
-
 def main():
-    # directory = "clustering_results/k_means/"
-    # input_file = "features_with_clusters.csv"
-    # output_file = "_video_similarity.csv"
-    # methods = ["shots_method", "common_clusters_method", "distance_matrix_method"]
-    # method = methods[2]
-    # similarity_calculator = SimilarityCalculator(directory, input_file, method + output_file)
-    print ""
-
-    # ----------------
-    row_count = 6
-    column_count = 4
-    distance_matrix = [
-        [6, 1, 2, 7],
-        [2, 5, 1, 4],
-        [3, 4, 3, 1],
-        [9, 3, 8, 2],
-        [5, 2, 6, 2],
-        [6, 1, 4, 1]
-    ]
-
-    d1 = calculate_similarity_distance_matrix_method_v2(distance_matrix, row_count, column_count)
-    print "V1.V2=" + str(d1)
-    print ""
-    row_count1 = 4
-    column_count1 = 6
-    distance_matrix1 = [
-        [6, 2, 3, 9, 5, 6],
-        [1, 5, 4, 3, 2, 1],
-        [2, 1, 3, 8, 6, 4],
-        [7, 4, 1, 2, 2, 1]
-    ]
-    d2 = calculate_similarity_distance_matrix_method_v2(distance_matrix1, row_count1, column_count1)
-    print "V2.V1=" + str(d2)
-    print ""
+    directory = "./"
+    input_file = "shot_features.csv"
+    output_file = "_video_similarity.csv"
+    methods = ["shots_method", "common_clusters_method", "distance_matrix_method"]
+    method = methods[2]
+    similarity_calculator = SimilarityCalculator(directory, input_file, method + output_file)
+    similarity_calculator.generate_video_similarity_distance_csv(method)
+    print "Done!"
 
 
 main()
