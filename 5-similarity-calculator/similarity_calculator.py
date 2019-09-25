@@ -221,7 +221,7 @@ class SimilarityCalculator:
         return matrix
 
     @staticmethod
-    def __convert_to_linear_array(array_2d):
+    def convert_to_linear_array(array_2d):
         linear_array = []
         row_number = len(array_2d)
         col_number = len(array_2d[0])
@@ -242,7 +242,7 @@ class SimilarityCalculator:
         #   for each element that is not belong to removed col or row:
         #       search for the smallest value and remove the col and row
         distance_matrix = SimilarityCalculator.__generate_distance_matrix(video1, video2)
-        linear_array = SimilarityCalculator.__convert_to_linear_array(distance_matrix)
+        linear_array = SimilarityCalculator.convert_to_linear_array(distance_matrix)
         linear_array.sort(key=lambda x: x[2])
         removed_columns = []
         removed_rows = []
@@ -269,7 +269,7 @@ class SimilarityCalculator:
         #       search for the smallest value and remove the col and row
         distance_matrix, row_count, column_count = SimilarityCalculator.__generate_full_distance_matrix(video1, video2)
 
-        linear_array = SimilarityCalculator.__convert_to_linear_array(distance_matrix)
+        linear_array = SimilarityCalculator.convert_to_linear_array(distance_matrix)
         linear_array.sort(key=lambda x: x[2])
         removed_columns = []
         removed_rows = []
@@ -294,11 +294,15 @@ class SimilarityCalculator:
             distance_score += min(distance_matrix[row])
 
         # special case solve it
-        # for col in range(column_count):
-        #     if col not in removed_columns:
-        #         miss_calculated_columns.append(col)
-        # for col in miss_calculated_rows:
-        #     distance_score += min(distance_matrix[row])
+
+        for col in range(column_count):
+            if col not in removed_columns:
+                miss_calculated_columns.append(col)
+        for col in miss_calculated_columns:
+            complete_column = []
+            for row in range(row_count):
+                complete_column.append(distance_matrix[row][col])
+            distance_score += min(complete_column)
         return distance_score
 
     def generate_video_similarity_csv(self, method):
@@ -346,14 +350,79 @@ class SimilarityCalculator:
             print("csv file has been created successfully")
 
 
+def calculate_similarity_distance_matrix_method_v2(distance_matrix, row_count, column_count):
+    linear_array = SimilarityCalculator.convert_to_linear_array(distance_matrix)
+    linear_array.sort(key=lambda x: x[2])
+    removed_columns = []
+    removed_rows = []
+    distance_score = 0
+    # phase 1
+    for elem in linear_array:
+        row = elem[0]
+        col = elem[1]
+        distance = elem[2]
+        if row not in removed_rows and col not in removed_columns:
+            removed_columns.append(col)
+            removed_rows.append(row)
+            if distance != 0:
+                distance_score += distance
+    miss_calculated_rows = []
+    miss_calculated_columns = []
+    for row in range(row_count):
+        if row not in removed_rows:
+            miss_calculated_rows.append(row)
+
+    for row in miss_calculated_rows:
+        distance_score += min(distance_matrix[row])
+
+    # special case solve it
+
+    for col in range(column_count):
+        if col not in removed_columns:
+            miss_calculated_columns.append(col)
+    for col in miss_calculated_columns:
+        complete_column = []
+        for row in range(row_count):
+            complete_column.append(distance_matrix[row][col])
+        distance_score += min(complete_column)
+    return distance_score
+
+
 def main():
-    directory = "clustering_results/k_means/"
-    input_file = "features_with_clusters.csv"
-    output_file = "_video_similarity.csv"
-    methods = ["shots_method", "common_clusters_method", "distance_matrix_method"]
-    method = methods[2]
-    similarity_calculator = SimilarityCalculator(directory, input_file, method + output_file)
-    similarity_calculator.generate_video_similarity_csv(method)
+    # directory = "clustering_results/k_means/"
+    # input_file = "features_with_clusters.csv"
+    # output_file = "_video_similarity.csv"
+    # methods = ["shots_method", "common_clusters_method", "distance_matrix_method"]
+    # method = methods[2]
+    # similarity_calculator = SimilarityCalculator(directory, input_file, method + output_file)
+    print ""
+
+    # ----------------
+    row_count = 6
+    column_count = 4
+    distance_matrix = [
+        [6, 1, 2, 7],
+        [2, 5, 1, 4],
+        [3, 4, 3, 1],
+        [9, 3, 8, 2],
+        [5, 2, 6, 2],
+        [6, 1, 4, 1]
+    ]
+
+    d1 = calculate_similarity_distance_matrix_method_v2(distance_matrix, row_count, column_count)
+    print "V1.V2=" + str(d1)
+    print ""
+    row_count1 = 4
+    column_count1 = 6
+    distance_matrix1 = [
+        [6, 2, 3, 9, 5, 6],
+        [1, 5, 4, 3, 2, 1],
+        [2, 1, 3, 8, 6, 4],
+        [7, 4, 1, 2, 2, 1]
+    ]
+    d2 = calculate_similarity_distance_matrix_method_v2(distance_matrix1, row_count1, column_count1)
+    print "V2.V1=" + str(d2)
+    print ""
 
 
 main()
