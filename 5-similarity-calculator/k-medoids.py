@@ -190,7 +190,7 @@ class K_Medoids:
             video_cluster = centroid_distances.index(min(centroid_distances))
             # save the video in cluster dictionary
             k_result[video_cluster].append(video)
-
+        # 3- recalculate the centroids in each cluster
         print ""
 
 
