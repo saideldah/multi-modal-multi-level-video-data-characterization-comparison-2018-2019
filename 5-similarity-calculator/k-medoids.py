@@ -276,9 +276,9 @@ def generate_csv(k_medoids_result, output_file):
 def main():
     directory = "./"
     input_file = "shot_features_test.csv"
-    output_file = "k_medoids_results.csv"
+    output_file = "k_medoids_results_50.csv"
     k_medoids = K_Medoids(directory, input_file, output_file)
-    k_medoids_result = k_medoids.run(30)
+    k_medoids_result = k_medoids.run(50)
     generate_csv(k_medoids_result, output_file)
     print "Done!"
 
