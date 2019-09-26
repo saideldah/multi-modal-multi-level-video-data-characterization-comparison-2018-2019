@@ -182,7 +182,7 @@ class K_Medoids:
         video_with_minimum_distance_sum = video_list[video_with_minimum_distance_sum_index]
         return video_with_minimum_distance_sum
 
-    def run(self, n_cluster=2):
+    def run(self, n_cluster=2, n_phases=20):
         print ("Start K_Medoids")
         print ("number of clusters: " + str(n_cluster))
 
@@ -224,8 +224,8 @@ class K_Medoids:
         # calculate distance between each video in tha same cluster
         # sum the distances of each video
         # ths video with minimum sum will be the new center
-        for i in range(20):
-            print ("phase: " + str(i + 1) + "/20")
+        for i in range(n_phases):
+            print ("phase: " + str(i + 1) + "/" + str(n_phases))
             new_centroid_list = {}
             for cluster, cluster_video_list in k_result.iteritems():
                 new_centroid_list[cluster] = self.__get_video_with_minimum_distance_sum(cluster_video_list)
@@ -278,7 +278,7 @@ def main():
     input_file = "shot_features_test.csv"
     output_file = "k_medoids_results.csv"
     k_medoids = K_Medoids(directory, input_file, output_file)
-    k_medoids_result = k_medoids.run(20)
+    k_medoids_result = k_medoids.run(30)
     generate_csv(k_medoids_result, output_file)
     print "Done!"
 
