@@ -276,9 +276,15 @@ def generate_csv(k_medoids_result, output_file):
 def main():
     directory = "./"
     input_file = "shot_features_test.csv"
+<<<<<<< HEAD
+    output_file = "k_medoids_results_20.csv"
+    k_medoids = K_Medoids(directory, input_file, output_file)
+    k_medoids_result = k_medoids.run(20)
+=======
     output_file = "k_medoids_results_50.csv"
     k_medoids = K_Medoids(directory, input_file, output_file)
     k_medoids_result = k_medoids.run(50)
+>>>>>>> 86b6056374ede8f6c1973c23c9dc37b1e3d941aa
     generate_csv(k_medoids_result, output_file)
     print "Done!"
 
