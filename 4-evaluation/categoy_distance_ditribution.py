@@ -54,6 +54,7 @@ def generate_category_feature(input_file_path, output_file_path):
     with open(output_file_path, 'wb') as f:
         the_writer = csv.writer(f)
         headers = [
+            "video"
             "category",
             "interactions_number_speakers_2",
             "interactions_number_speakers_3",

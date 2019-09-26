@@ -21,13 +21,15 @@ class Shot:
 
 
 class K_Medoids:
+
     def __init__(self, directory_path, input_file_name, out_put_file_name):
         self.__file_name = input_file_name
         self.__directory_path = directory_path
         self.__out_put_file_name = out_put_file_name
         self.__file_path = directory_path + input_file_name
         self.__video_list = K_Medoids.__fill_video_list(self.__file_path)
-        print(str(len(self.__video_list)))
+        self.__distance_memory = {}
+        print("number of videos = " + str(len(self.__video_list)))
 
     @staticmethod
     def __convert_to_float(string_vector):
@@ -160,7 +162,30 @@ class K_Medoids:
             distance_score += min(complete_column)
         return distance_score
 
+    def __get_video_with_minimum_distance_sum(self, video_list):
+        video_distance_sum = {}
+        video_list_count = len(video_list)
+        for v1_index in range(video_list_count):
+            video_distance_sum[v1_index] = 0
+            for v2_index in range(v1_index + 1, video_list_count):
+                video1 = video_list[v1_index]
+                video2 = video_list[v2_index]
+                if video1.name == video2.name:
+                    continue
+                key = video1.name + "_" + video2.name
+                kei_inverse = video2.name + "_" + video1.name
+                if key not in self.__distance_memory or not kei_inverse not in self.__distance_memory:
+                    distance = K_Medoids.__calculate_distance(video1, video2)
+                    self.__distance_memory[key] = distance
+                video_distance_sum[v1_index] += self.__distance_memory[key]
+        video_with_minimum_distance_sum_index = min(video_distance_sum, key=video_distance_sum.get)
+        video_with_minimum_distance_sum = video_list[video_with_minimum_distance_sum_index]
+        return video_with_minimum_distance_sum
+
     def run(self, n_cluster=2):
+        print ("Start K_Medoids")
+        print ("number of clusters: " + str(n_cluster))
+
         # 1- select k random point as initial cluster centroid
         # 2- for each video select cluster
         # 3- recalculate the centroids in each cluster
@@ -177,31 +202,84 @@ class K_Medoids:
         # 2- for each video select cluster
         k_result = {}
         for k in range(n_cluster):
-            k_result = []
+            k_result[k] = []
         for video in self.__video_list:
             centroid_distances = []
             for k in range(n_cluster):
                 ci = centroids_indexes[k]
                 cluster_centroid = self.__video_list[ci]
-                distance = K_Medoids.__calculate_distance(video, cluster_centroid)
+                key = video.name + "_" + cluster_centroid.name
+                kei_inverse = cluster_centroid.name + "_" + video.name
+                if key not in self.__distance_memory or not kei_inverse not in self.__distance_memory:
+                    distance = K_Medoids.__calculate_distance(video, cluster_centroid)
+                    self.__distance_memory[key] = distance
+                distance = self.__distance_memory[key]
                 centroid_distances.append(distance)
-
             # get video cluster
             video_cluster = centroid_distances.index(min(centroid_distances))
             # save the video in cluster dictionary
             k_result[video_cluster].append(video)
+
         # 3- recalculate the centroids in each cluster
-        print ""
+        # calculate distance between each video in tha same cluster
+        # sum the distances of each video
+        # ths video with minimum sum will be the new center
+        for i in range(20):
+            print ("phase: " + str(i + 1) + "/20")
+            new_centroid_list = {}
+            for cluster, cluster_video_list in k_result.iteritems():
+                new_centroid_list[cluster] = self.__get_video_with_minimum_distance_sum(cluster_video_list)
+
+            k_result = {}
+            for k in range(n_cluster):
+                k_result[k] = []
+            for video in self.__video_list:
+                centroid_distances = {}
+                for cluster, cluster_centroid in new_centroid_list.iteritems():
+                    key = video.name + "_" + cluster_centroid.name
+                    kei_inverse = cluster_centroid.name + "_" + video.name
+                    if key not in self.__distance_memory or not kei_inverse not in self.__distance_memory:
+                        distance = K_Medoids.__calculate_distance(video, cluster_centroid)
+                        self.__distance_memory[key] = distance
+                    distance = self.__distance_memory[key]
+                    centroid_distances[cluster] = distance
+
+                # get video cluster
+                video_cluster = min(centroid_distances, key=centroid_distances.get)
+                # save the video in cluster dictionary
+                k_result[video_cluster].append(video)
+
+        return k_result
+
+
+def generate_csv(k_medoids_result, output_file):
+    print "generating generate category feature csv"
+    with open(output_file, 'wb') as f:
+        the_writer = csv.writer(f)
+        headers = [
+            "video",
+            "category",
+            "cluster"
+        ]
+        the_writer.writerow(headers)
+        iteration = 1
+        max_value = len(k_medoids_result)
+        for cluster, cluster_videos in k_medoids_result.iteritems():
+            for video in cluster_videos:
+                vector = [video.name, video.category, cluster]
+                the_writer.writerow(vector)
+            utl.print_progress_bar(iteration, max_value)
+            iteration += 1
+        f.close()
 
 
 def main():
     directory = "./"
     input_file = "shot_features_test.csv"
-    output_file = "_video_similarity.csv"
-    methods = ["shots_method", "common_clusters_method", "distance_matrix_method"]
-    method = methods[2]
-    k_medoids = K_Medoids(directory, input_file, method + output_file)
-    k_medoids.run(2)
+    output_file = "k_medoids_results.csv"
+    k_medoids = K_Medoids(directory, input_file, output_file)
+    k_medoids_result = k_medoids.run(20)
+    generate_csv(k_medoids_result, output_file)
     print "Done!"
 
 
