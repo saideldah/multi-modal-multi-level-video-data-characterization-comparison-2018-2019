@@ -1,8 +1,0 @@
-cluster,category,precision
--1,travel,0.19883720930232557
-0,citizen_journalism,0.14125500667556742
-1,conferences_and_other_events,0.2222222222222222
-2,autos_and_vehicles,0.16666666666666666
-3,citizen_journalism,0.8
-4,technology,0.2857142857142857
-5,default_category,0.6

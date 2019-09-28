@@ -20,6 +20,9 @@ class Shot:
         pass
 
 
+distance_memory = {}
+
+
 class K_Medoids:
 
     def __init__(self, directory_path, input_file_name, out_put_file_name):
@@ -28,7 +31,6 @@ class K_Medoids:
         self.__out_put_file_name = out_put_file_name
         self.__file_path = directory_path + input_file_name
         self.__video_list = K_Medoids.__fill_video_list(self.__file_path)
-        self.__distance_memory = {}
         print("number of videos = " + str(len(self.__video_list)))
 
     @staticmethod
@@ -174,10 +176,10 @@ class K_Medoids:
                     continue
                 key = video1.name + "_" + video2.name
                 kei_inverse = video2.name + "_" + video1.name
-                if key not in self.__distance_memory or not kei_inverse not in self.__distance_memory:
+                if key not in distance_memory or not kei_inverse not in distance_memory:
                     distance = K_Medoids.__calculate_distance(video1, video2)
-                    self.__distance_memory[key] = distance
-                video_distance_sum[v1_index] += self.__distance_memory[key]
+                    distance_memory[key] = distance
+                video_distance_sum[v1_index] += distance_memory[key]
         video_with_minimum_distance_sum_index = min(video_distance_sum, key=video_distance_sum.get)
         video_with_minimum_distance_sum = video_list[video_with_minimum_distance_sum_index]
         return video_with_minimum_distance_sum
@@ -210,10 +212,10 @@ class K_Medoids:
                 cluster_centroid = self.__video_list[ci]
                 key = video.name + "_" + cluster_centroid.name
                 kei_inverse = cluster_centroid.name + "_" + video.name
-                if key not in self.__distance_memory or not kei_inverse not in self.__distance_memory:
+                if key not in distance_memory or not kei_inverse not in distance_memory:
                     distance = K_Medoids.__calculate_distance(video, cluster_centroid)
-                    self.__distance_memory[key] = distance
-                distance = self.__distance_memory[key]
+                    distance_memory[key] = distance
+                distance = distance_memory[key]
                 centroid_distances.append(distance)
             # get video cluster
             video_cluster = centroid_distances.index(min(centroid_distances))
@@ -224,12 +226,32 @@ class K_Medoids:
         # calculate distance between each video in tha same cluster
         # sum the distances of each video
         # ths video with minimum sum will be the new center
+
+        centroids_memory = []
         for i in range(n_phases):
             print ("phase: " + str(i + 1) + "/" + str(n_phases))
+
+            # get the new centroids
             new_centroid_list = {}
             for cluster, cluster_video_list in k_result.iteritems():
                 new_centroid_list[cluster] = self.__get_video_with_minimum_distance_sum(cluster_video_list)
 
+            # check the centroids memory
+            # compose centroids key
+            centroids_key = ""
+            for c, v in new_centroid_list.iteritems():
+                centroids_key += v.name
+
+            centroid_in_memory = True
+            if centroids_key not in centroids_memory:
+                centroid_in_memory = False
+                centroids_memory.append(centroids_key)
+            if centroid_in_memory:
+                print ""
+                print "found in centroid memory"
+                print ""
+                break
+            # cluster the videos based on the new centroid
             k_result = {}
             for k in range(n_cluster):
                 k_result[k] = []
@@ -238,10 +260,10 @@ class K_Medoids:
                 for cluster, cluster_centroid in new_centroid_list.iteritems():
                     key = video.name + "_" + cluster_centroid.name
                     kei_inverse = cluster_centroid.name + "_" + video.name
-                    if key not in self.__distance_memory or not kei_inverse not in self.__distance_memory:
+                    if key not in distance_memory or not kei_inverse not in distance_memory:
                         distance = K_Medoids.__calculate_distance(video, cluster_centroid)
-                        self.__distance_memory[key] = distance
-                    distance = self.__distance_memory[key]
+                        distance_memory[key] = distance
+                    distance = distance_memory[key]
                     centroid_distances[cluster] = distance
 
                 # get video cluster
@@ -276,11 +298,15 @@ def generate_csv(k_medoids_result, output_file):
 def main():
     directory = "./"
     input_file = "shot_features_test.csv"
-    output_file = "k_medoids_results_50.csv"
-    k_medoids = K_Medoids(directory, input_file, output_file)
-    k_medoids_result = k_medoids.run(50)
-    generate_csv(k_medoids_result, output_file)
-    print "Done!"
+    n_clusters = 30
+    for i in range(9):
+        output_file = "k_medoids_results_" + str(n_clusters) + ".csv"
+        k_medoids = K_Medoids(directory, input_file, output_file)
+        k_medoids_result = k_medoids.run(n_clusters, 50)
+        generate_csv(k_medoids_result, output_file)
+        n_clusters += 5
+        print "Done!"
+        print ""
 
 
 main()

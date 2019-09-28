@@ -328,7 +328,7 @@ class EvaluationManager:
                 .replace("_k_means", "") \
                 .replace("_birch", "") \
                 .replace("_mean_shift", "") \
-                .replace("_db_scan", "")
+                .replace("_db_scan", "").replace("k_medoids_results_", "")
             category_per_cluster_csv = category_per_cluster_directory + file_name
             accuracy_list[int(key)] = EvaluationManager.__get_accuracy_for_category_per_cluster(category_per_cluster_csv)
 
@@ -366,7 +366,7 @@ class EvaluationManager:
                 .replace("_k_means", "") \
                 .replace("_birch", "") \
                 .replace("_mean_shift", "") \
-                .replace("_db_scan", "")
+                .replace("_db_scan", "").replace("k_medoids_results_", "")
             cluster_per_category_csv = cluster_per_category_directory + file_name
             accuracy_list[int(key)] = EvaluationManager.__get_accuracy_for_cluster_per_category(cluster_per_category_csv)
 
@@ -404,7 +404,7 @@ class EvaluationManager:
                 .replace("_k_means", "") \
                 .replace("_birch", "") \
                 .replace("_mean_shift", "") \
-                .replace("_db_scan", "")
+                .replace("_db_scan", "").replace("k_medoids_results_", "")
             category_per_cluster_csv = precision_cluster_per_category_directory + file_name
             accuracy_list[int(key)] = EvaluationManager.__get_mean_average_precision(category_per_cluster_csv)
 
@@ -442,7 +442,7 @@ class EvaluationManager:
                 .replace("_k_means", "") \
                 .replace("_birch", "") \
                 .replace("_mean_shift", "") \
-                .replace("_db_scan", "")
+                .replace("_db_scan", "").replace("k_medoids_results_", "")
             category_per_cluster_csv = precision_category_per_cluster_directory + file_name
             accuracy_list[int(key)] = EvaluationManager.__get_mean_average_precision(category_per_cluster_csv)
 
@@ -501,15 +501,16 @@ def clear(directory):
 def main():
     # print "generate_distribution_csv_files"
     directory_path_list = [
-        "./clustering_results/k_means/complete_video/",
-        "./clustering_results/k_means/video/",
-        "./clustering_results/k_means/shot/",
-        "./clustering_results/birch/complete_video/",
-        "./clustering_results/birch/video/",
-        "./clustering_results/db_scan/complete_video/",
-        "./clustering_results/db_scan/video/",
-        "./clustering_results/mean_shift/complete_video/",
-        "./clustering_results/mean_shift/video/"
+        # "./clustering_results/k_means/complete_video/",
+        # "./clustering_results/k_means/video/",
+        # "./clustering_results/k_means/shot/",
+        # "./clustering_results/birch/complete_video/",
+        # "./clustering_results/birch/video/",
+        # "./clustering_results/db_scan/complete_video/",
+        # "./clustering_results/db_scan/video/",
+        # "./clustering_results/mean_shift/complete_video/",
+        # "./clustering_results/mean_shift/video/",
+        "./clustering_results/k-medoid/shot/"
     ]
     clear("./evaluation_results")
 
