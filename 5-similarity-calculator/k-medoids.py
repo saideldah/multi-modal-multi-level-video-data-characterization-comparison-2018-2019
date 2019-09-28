@@ -280,6 +280,7 @@ def generate_csv(k_medoids_result, output_file):
         the_writer = csv.writer(f)
         headers = [
             "video",
+            "shot_number",
             "category",
             "cluster"
         ]
@@ -288,7 +289,7 @@ def generate_csv(k_medoids_result, output_file):
         max_value = len(k_medoids_result)
         for cluster, cluster_videos in k_medoids_result.iteritems():
             for video in cluster_videos:
-                vector = [video.name, video.category, cluster]
+                vector = [video.name, 0, video.category, cluster]
                 the_writer.writerow(vector)
             utl.print_progress_bar(iteration, max_value)
             iteration += 1
