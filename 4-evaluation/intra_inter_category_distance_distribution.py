@@ -27,6 +27,7 @@ def get_category_all_features_dictionary(input_file_path):
     with open(input_file_path, 'r') as csvFile:
         reader = csv.reader(csvFile)
         iteration = 0
+        print("")
         print("preparing dataset_by_category ...")
 
         for row in reader:
@@ -37,7 +38,7 @@ def get_category_all_features_dictionary(input_file_path):
                     category_features[category] = []
                 category_features[category].append(feature_vector)
 
-                utl.print_progress_bar(iteration + 1, data_set_count)
+            utl.print_progress_bar(iteration, data_set_count)
             iteration += 1
     csvFile.close()
     return category_features
@@ -49,8 +50,10 @@ def generate_category_feature(input_file_path, output_file_path):
     category_average_features = {}
 
     for category, category_feature_vector_list in category_features.iteritems():
-        category_average_features[category] = calculate_vectors_average(category_feature_vector_list)
-    print "generating generate category feature csv"
+        category_average_features[category] = calculate_vectors_average(
+            category_feature_vector_list)
+    print ""
+    print "generate category feature csv"
     with open(output_file_path, 'wb') as f:
         the_writer = csv.writer(f)
         headers = [
@@ -102,6 +105,7 @@ def get_category_center_features_dictionary(input_file_path):
     with open(input_file_path, 'r') as csvFile:
         reader = csv.reader(csvFile)
         iteration = 0
+        print("")
         print("preparing dataset_by_category ...")
 
         for row in reader:
@@ -112,7 +116,7 @@ def get_category_center_features_dictionary(input_file_path):
                     category_features[category] = []
                 category_features[category].append(feature_vector)
 
-                utl.print_progress_bar(iteration + 1, data_set_count)
+            utl.print_progress_bar(iteration, data_set_count)
             iteration += 1
     csvFile.close()
     return category_features
@@ -123,8 +127,10 @@ def get_category_self_distance_dictionary(category_all_features, category_center
     for category_name_average, category_average_feature_vector in category_center_features.iteritems():
         category_distance_dictionary[category_name_average] = []
         for category_complete_feature_vector in category_all_features[category_name_average]:
-            distance = utl.calculate_distance(category_average_feature_vector, category_complete_feature_vector)
-            category_distance_dictionary[category_name_average].append(distance)
+            distance = utl.calculate_distance(
+                category_average_feature_vector, category_complete_feature_vector)
+            category_distance_dictionary[category_name_average].append(
+                distance)
     category_average_distance_dictionary = {}
     for category, distance_list in category_distance_dictionary.iteritems():
         category_average_distance_dictionary[category] = mean(distance_list)
@@ -135,14 +141,17 @@ def get_category_self_distance_dictionary(category_all_features, category_center
 def get_two_categories_distance(category_all_feature_vectors, category_center_feature_vector):
     category_distance_list = []
     for category_feature_vector in category_all_feature_vectors:
-        distance = utl.calculate_distance(category_feature_vector, category_center_feature_vector)
+        distance = utl.calculate_distance(
+            category_feature_vector, category_center_feature_vector)
         category_distance_list.append(distance)
     return mean(category_distance_list)
 
 
-def generate_category_feature_distribution(features_file_path, input_file_path, output_file_path):
-    category_center_features = get_category_center_features_dictionary(input_file_path)
-    category_all_features = get_category_all_features_dictionary(features_file_path)
+def generate_intra_inter_category_distribution(features_file_path, input_file_path, output_file_path):
+    category_center_features = get_category_center_features_dictionary(
+        input_file_path)
+    category_all_features = get_category_all_features_dictionary(
+        features_file_path)
     category_self_distance_dictionary = get_category_self_distance_dictionary(category_all_features,
                                                                               category_center_features)
     category_distance_dictionary = {}
@@ -151,12 +160,13 @@ def generate_category_feature_distribution(features_file_path, input_file_path, 
         categories.append(category)
         for category2, category_feature_vector2 in category_center_features.iteritems():
             if category != category2:
-                dist = get_two_categories_distance(category_all_features[category], category_center_features[category2])
+                dist = get_two_categories_distance(
+                    category_all_features[category], category_center_features[category2])
             else:
                 dist = category_self_distance_dictionary[category]
 
             category_distance_dictionary[category + "_" + category2] = dist
-
+    print ""
     print "generating generate category feature csv"
     with open(output_file_path, 'wb') as f:
         the_writer = csv.writer(f)
@@ -167,10 +177,11 @@ def generate_category_feature_distribution(features_file_path, input_file_path, 
         for category in categories:
             vector = [category]
             for category2 in categories:
-                vector.append(category_distance_dictionary[category + "_" + category2])
+                vector.append(
+                    category_distance_dictionary[category + "_" + category2])
+                utl.print_progress_bar(iteration, max_value)
+                iteration += 1
             the_writer.writerow(vector)
-            utl.print_progress_bar(iteration, max_value)
-            iteration += 1
         f.close()
 
 
@@ -180,25 +191,34 @@ def mean(numbers):
 
 def main():
     input_output_list = [
-        ["./features/normalized_shot_features.csv", "category_average_shot_features.csv"],
-        ["./features/normalized_video_features.csv", "category_average_video_features.csv"],
-        ["./features/normalized_complete_video_features.csv", "category_average_complete_video_features.csv"]
+        ["./features/normalized_shot_features.csv",
+         "category_average_shot_features.csv"],
+        ["./features/normalized_video_features.csv",
+         "category_average_video_features.csv"],
+        ["./features/normalized_complete_video_features.csv",
+         "category_average_complete_video_features.csv"]
     ]
     for input_output in input_output_list:
+        print ""
         print "generating " + input_output[1]
         generate_category_feature(input_output[0], input_output[1])
 
+    print ""
+    print "------------------------------------------------"
+
     input_output_list2 = [
         ["./features/normalized_shot_features.csv", "category_average_shot_features.csv",
-         "category_shot_distance_distribution_with_self_distance.csv"],
+         "intra_inter_category_distribution_shot.csv"],
         ["./features/normalized_video_features.csv", "category_average_video_features.csv",
-         "category_video_distance_distribution_with_self_distance.csv"],
+         "intra_inter_category_distribution_video.csv"],
         ["./features/normalized_complete_video_features.csv", "category_average_complete_video_features.csv",
-         "category_complete_video_distance_distribution_with_self_distance.csv"]
+         "intra_inter_category_distribution_complete_video.csv"]
     ]
     for input_output in input_output_list2:
-        print "generating " + input_output[1]
-        generate_category_feature_distribution(input_output[0], input_output[1], input_output[2])
+        print ""
+        print "generating " + input_output[2]
+        generate_intra_inter_category_distribution(
+            input_output[0], input_output[1], input_output[2])
 
 
 main()
